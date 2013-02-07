@@ -1,0 +1,9 @@
+SERVER STARTED AT 15:53
+QUERIED AT 16:32
+17:48
+
+--> ComQueryPacket
+( command: 3,
+  sql: *query here* )
+
+( [Error: Cannot enqueue Query after being destroyed.] code: 'PROTOCOL_ENQUEUE_AFTER_DESTROY', fatal: false )

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Bound: MMOG</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+body {
+background:#fff;
+padding:0;
+margin:0;
+overflow:hidden;
+	font-family:'trebuchet ms', 'lucida grande', 'lucida sans unicode', arial, helvetica, sans-serif;
+	text-align:center;
+}
+canvas { pointer-events:none; z-index:10; }
+
+p { font-size: small;}
+
+</style>
+</head>
+
+<body>
+<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="/js/Detector.js" type="text/javascript"></script>
+<script src="/js/build/three.min.js" type="text/javascript"></script>
+<script src="/js/ColladaLoader.js" type="text/javascript"></script>
+<script src="/js/RequestAnimationFrame.js" type="text/javascript"></script>
+	
+<script src="/js/game/Vector3.js" type="text/javascript"></script>
+<script src="/js/game/Player.js" type="text/javascript"></script>
+	
+<script>
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+var cPKeys = {}; //Initialise array to track all key presses
+document.onkeydown = getKeyboard; //Register Key Press Event
+document.onkeyup = resKeyboard; //Register Key Release Event
+
+
+var SCREEN_WIDTH = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+var container;
+var camera, scene;
+var webglRenderer;
+var players = new Array();
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
+var playerID;
+
+var socket = io.connect(); //Ensure to keep this blank.
+
+/*		Socket.IO Connection Events
+		Registered messages to and from server		*/
+socket.on('connect', function () {
+	/*		Socket.IO initial client connected		*/
+	socket.on('CON_ACCEPT', function (locations, rotations) {
+		console.log('*****CON_ACCEPT*****');
+		console.log(locations.length);
+		for (var i = 0; i < locations.length; i++)
+		{
+			players.push(new Player("Models/PCs/male/dance_01.dae", locations[i], rotations[i]));
+		}
+		playerID=locations.length-0;
+	});
+	
+	/*		Socket.IO new outside client connected		*/
+	socket.on('NEW_CLIENT', function(locations, rotations) {
+		console.log('*****NEW_CLIENT*****');
+		players.push(new Player("Models/PCs/male/dance_01.dae", locations[locations.length-1], rotations[rotations.length-1]));
+	});
+});
+
+/*		Socket.IO recieve updated locations		*/
+socket.on('UPDATE_LOCS', function(locations, rotations) {
+	for (var i = 0; i < locations.length; i++)
+		{
+			if (locations[i] != null && players[i].model != 0)
+			{
+				players[i].loc = locations[i];
+				players[i].rot = rotations[i];
+				players[i].update();
+			}
+		}
+});
+
+socket.on('disconnect', function() {
+
+});
+
+window.onload = function() {
+	console.log("FIRING");
+
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
+
+	// camera
+	camera = new THREE.PerspectiveCamera( 75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+	camera.position.x = 0; camera.position.y = 30; camera.position.z = 175;
+
+	//scene
+	scene = new THREE.Scene();
+
+	// lights
+	var ambient = new THREE.AmbientLight( 0xffffff );
+	scene.add( ambient );
+
+	// more lights
+	//var directionalLight = new THREE.DirectionalLight( 0xffffff );
+	//directionalLight.position.set( 0, 40, 170 ).normalize();
+	//scene.add( directionalLight );
+
+	// renderer
+	webglRenderer = new THREE.WebGLRenderer();
+	webglRenderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	webglRenderer.domElement.style.position = "relative";
+	container.appendChild( webglRenderer.domElement );
+	
+	animate();
+	
+	new THREE.ColladaLoader().load("Models/Podium/Podium.dae",
+		function(collada) {
+			var model = collada.scene;
+			model.scale.set(10, 10, 10);
+			model.rotation.x = -Math.PI/2;
+			scene.add(model);
+	});
+}
+
+function animate() {
+	for (var i = 0; i < players.length; i++)
+	{
+		if (players[i].readyState == true && players[i].onScreen == false)
+		{
+			scene.add(players[i].model);
+			players[i].onScreen = true;
+			console.log("Adding Player");
+		}
+	}
+
+	requestAnimationFrame( animate );
+	handleInput();
+	render();
+
+	if (players[0] != null)
+	{
+		//camera.position.x = players[0].loc.x;
+	}
+}
+
+function handleInput() { 	//Function where Input logic handling occurs
+	if (cPKeys[65])
+		socket.emit('A');
+	if (cPKeys[68])
+		socket.emit('D');
+	if (cPKeys[87])
+		socket.emit('W');
+	if (cPKeys[83])
+		socket.emit('S');
+}
+function getKeyboard(event) {	//Keyboard Press Event
+	cPKeys[event.keyCode] = true;
+}
+function resKeyboard(event) {	//Keyboard Release Event
+	cPKeys[event.keyCode] = false;
+}
+
+function render() {
+
+	webglRenderer.render( scene, camera );
+}
+
+</script>
+
+	</body>
+	</html>

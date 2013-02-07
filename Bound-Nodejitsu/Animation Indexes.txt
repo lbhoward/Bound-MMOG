@@ -1,0 +1,18 @@
+141_31	Walk Backwards
+139_05	Pulling a Gun
+
+137_37	Sexy Lady Wait
+137_38	Sexy Lady Walk
+137_41	Strong Man Wait
+137_42	Strong Man Walk
+
+80_03	Shooting a Gun <Machine gun - edit done>
+79_96	Shooting a Gun <Shotgun - very nice>
+
+76_03	Avoid Attacker <Avoiding thrown items? Mleh>
+76_04	Guard Pose <Squatting...>
+
+02_07	Swordplay <Not great>
+02_08	Swordplay <Not great>
+02_09	Swordplay <Not great>
+

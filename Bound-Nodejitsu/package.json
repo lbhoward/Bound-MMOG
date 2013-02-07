@@ -1,0 +1,20 @@
+{
+  "name": "Bound-Game-Server",
+  "description": "WebGL/Socket.IO Game Server",
+  "version": "0.0.1-7",
+  "main": "server.js",
+  "dependencies": {
+    "socket.io": "0.8.x",
+    "express": "3.x",
+    "mysql": "x.x",
+    "crypto": "x.x"
+  },
+  "private": "true",
+  "subdomain": "lbhoward.Bound-Nodejitsu",
+  "scripts": {
+    "start": "server.js"
+  },
+  "engines": {
+    "node": "0.8.x"
+  }
+}

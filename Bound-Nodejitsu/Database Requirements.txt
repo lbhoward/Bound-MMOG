@@ -1,0 +1,11 @@
+Items we need to store on the server:
+
+EMAIL
+PASSWORD
+GENDER
+POSITION
+ROTATION
+LEVEL
+XP
+CLASS
+TALENTS

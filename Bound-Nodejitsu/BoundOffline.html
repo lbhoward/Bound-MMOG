@@ -1,0 +1,176 @@
+<head>
+<title>Bound: MMOG</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+body {
+background:#fff;
+padding:0;
+margin:0;
+overflow:hidden;
+	font-family:'trebuchet ms', 'lucida grande', 'lucida sans unicode', arial, helvetica, sans-serif;
+	text-align:center;
+}
+canvas { pointer-events:none; z-index:10; }
+
+p { font-size: small;}
+
+</style>
+</head>
+
+<body>
+<script src="/js/Detector.js" type="text/javascript"></script>
+<script src="/js/build/three.min.js" type="text/javascript"></script>
+<script src="/js/ColladaLoader.js" type="text/javascript"></script>
+<script src="/js/RequestAnimationFrame.js" type="text/javascript"></script>
+<script src="/js/VirtualJoystick.js" type="text/javascript"></script>
+<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="/js/game/Vector3.js" type="text/javascript"></script>
+<script src="/js/game/Player.js" type="text/javascript"></script>
+	
+<script>
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+var cPKeys = {}; //Initialise array to track all key presses
+document.onkeydown = getKeyboard; //Register Key Press Event
+document.onkeyup = resKeyboard; //Register Key Release Event
+
+var SCREEN_WIDTH = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+var container;
+var camera, scene;
+var webglRenderer;
+var players = new Array();
+var activePlayer;
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
+var playerID;
+var joystick;
+
+//Socket.IO
+var socket = io.connect();
+
+socket.on('connect', function () {
+	socket.on('CON_ACCEPT', function(getPlayers) {
+		players = getPlayers;
+		socket.emit('REGISTER', playerName);
+	});
+});
+
+socket.on('UPDATE', function() {
+	socket.emit('RESPOND', activePlayer.loc.get());
+});
+
+window.onload = function init() {
+	console.log("Initiliasing Bound... Please Wait...");
+
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
+
+	// camera
+	camera = new THREE.PerspectiveCamera( 70, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+	camera.rotation.x = -0.5;
+
+	//scene
+	scene = new THREE.Scene();
+
+	// lights
+	var ambient = new THREE.AmbientLight( 0xffffff );
+	scene.add( ambient );
+
+	// renderer
+	webglRenderer = new THREE.WebGLRenderer();
+	webglRenderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	webglRenderer.domElement.style.position = "relative";
+	container.appendChild( webglRenderer.domElement );
+	
+	// joystick
+	joystick = new VirtualJoystick({
+		container	: document.getElementById('container'),
+		mouseSupport	: true,
+		width		:	SCREEN_WIDTH,
+		height		:	SCREEN_HEIGHT
+	});
+	
+	loadModel("Models/Arena/Arena.dae", 40);
+	loadModel("Models/Skydome/Skydome.dae", 1000);
+	
+	var indexActivePlayer = findWithAttr(players, 'USERNAME', playerName);
+	activePlayer = new Player("Models/PCs/male/dance_01.dae", new Vector3(players[indexActivePlayer].X,players[indexActivePlayer].Y,players[indexActivePlayer].Z), new Vector3(0,0,0));
+	
+	animate();
+}
+
+function loadModel(modelPath, scale) {
+new THREE.ColladaLoader().load(modelPath,
+		function(collada) {
+			var model = collada.scene;
+			model.scale.set(scale, scale, scale);
+			model.rotation.x = -Math.PI/2;
+			scene.add(model);
+			console.log(modelPath + ": Loaded");
+	});
+}
+
+function animate() {
+		if (activePlayer.readyState == true && activePlayer.onScreen == false)
+		{
+			scene.add(activePlayer.model);
+			activePlayer.onScreen = true;
+		}
+		if(activePlayer.onScreen)
+		{
+			//players[i].rot.y = camera.rotation.y;
+			//players[i].loc.x = camera.position.x + Math.cos(camera.rotation.y) * 16;
+			//players[i].loc.z = camera.position.z - Math.sin(camera.rotation.y) * 16;
+			activePlayer.update();
+		}
+
+	requestAnimationFrame( animate );
+	handleInput();
+	render();
+}
+
+function handleInput() { 	//Function where Input logic handling occurs
+	CamRotate();
+	CamTranslate();
+}
+
+//X: Left/Right		Y: +Up/-Down	Z: +Forward/-Backward
+function CamTranslate() {
+	activePlayer.loc = new Vector3(activePlayer.loc.x + (joystick.deltaX()*0.05), 0, activePlayer.loc.z + (joystick.deltaY()*0.05))
+	//activePlayer.loc.x -= Math.cos(activePlayer.rot.y-1.57) * (joystick.deltaY()*0.05);
+	//activePlayer.loc.z += Math.sin(activePlayer.rot.y-1.57) * (joystick.deltaY()*0.05);
+	camera.position = new Vector3(activePlayer.loc.x, activePlayer.loc.y + 90, activePlayer.loc.z + 90);
+	//camera.position.x = (activePlayer.loc.x + Math.cos(activePlayer.rot.y-1.57) * -46);
+	//camera.position.z = (activePlayer.loc.z - Math.sin(activePlayer.rot.y-1.57) * -46);
+}
+function CamRotate() {
+	activePlayer.rot.y = joystick.rotation();
+	//camera.rotation.y = activePlayer.rot.y + 3.14;
+}
+
+function getKeyboard(event) {	//Keyboard Press Event
+	cPKeys[event.keyCode] = true;
+}
+function resKeyboard(event) {	//Keyboard Release Event
+	cPKeys[event.keyCode] = false;
+}
+
+function render() {
+	webglRenderer.render( scene, camera );
+}
+
+//Search JSON Array for Matching Attribute, return index
+function findWithAttr(array, attr, value) {
+    for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+			console.log(value + "FOUND AT: " + i);
+            return i;
+        }
+    }
+}
+</script>
+
+	</body>
+	</html>

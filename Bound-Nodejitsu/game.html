@@ -1,0 +1,47 @@
+<head>
+<title>Bound: MMOG</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+body {
+background:#fff;
+padding:0;
+margin:0;
+overflow:hidden;
+	font-family:'trebuchet ms', 'lucida grande', 'lucida sans unicode', arial, helvetica, sans-serif;
+	text-align:center;
+}
+canvas { pointer-events:none; z-index:10; }
+
+p { font-size: small;}
+
+</style>
+</head>
+
+<body>
+<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="/js/Detector.js" type="text/javascript"></script>
+<script src="/js/build/three.min.js" type="text/javascript"></script>
+<script src="/js/ColladaLoader.js" type="text/javascript"></script>
+<script src="/js/RequestAnimationFrame.js" type="text/javascript"></script>
+<script src="/js/VirtualJoystick.js" type="text/javascript"></script>
+	
+<script src="/js/game/Vector3.js" type="text/javascript"></script>
+<script src="/js/game/Player.js" type="text/javascript"></script>
+<script src="/js/game/Animation.js" type="text/javascript"></script>
+<script src="/js/game/Boss.js" type="text/javascript"></script>
+
+<script src = "/network.js" type="text/javascript"></script>
+<script src = "/update.js" type="text/javascript"></script>
+<script src = "/drawing.js" type="text/javascript"></script>
+
+
+
+<script>
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+</script>
+
+<div id="canvas_container" />
+
+</body>
+</html>

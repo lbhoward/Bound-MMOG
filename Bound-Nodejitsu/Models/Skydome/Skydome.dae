@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.63.0 r46461:46487M</authoring_tool>
+    </contributor>
+    <created>2012-12-30T15:46:42</created>
+    <modified>2012-12-30T15:46:42</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images>
+    <image id="skydome_tex_png" name="skydome_tex_png">
+      <init_from>skydome_tex.png</init_from>
+    </image>
+  </library_images>
+  <library_effects>
+    <effect id="Material-effect">
+      <profile_COMMON>
+        <newparam sid="skydome_tex_png-surface">
+          <surface type="2D">
+            <init_from>skydome_tex_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="skydome_tex_png-sampler">
+          <sampler2D>
+            <source>skydome_tex_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">1 1 1 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="skydome_tex_png-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+        <extra>
+          <technique profile="GOOGLEEARTH">
+            <double_sided>1</double_sided>
+          </technique>
+        </extra>
+      </profile_COMMON>
+      <extra><technique profile="MAX3D"><double_sided>1</double_sided></technique></extra>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="Material-material" name="Material">
+      <instance_effect url="#Material-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="Icosphere-mesh" name="Icosphere">
+      <mesh>
+        <source id="Icosphere-mesh-positions">
+          <float_array id="Icosphere-mesh-positions-array" count="36">0 0 -1 0.7236 -0.52572 -0.447215 -0.276385 -0.85064 -0.447215 -0.894425 0 -0.447215 -0.276385 0.85064 -0.447215 0.7236 0.52572 -0.447215 0.276385 -0.85064 0.447215 -0.7236 -0.52572 0.447215 -0.7236 0.52572 0.447215 0.276385 0.85064 0.447215 0.894425 0 0.447215 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Icosphere-mesh-positions-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Icosphere-mesh-normals">
+          <float_array id="Icosphere-mesh-normals-array" count="36">0 0 1 0.2763756 0.8506425 0.4471877 -0.7235938 0.5257118 0.4471877 -0.7235938 -0.5257118 0.4471877 0.894406 0 0.4471877 0.2763756 -0.8506425 0.4471877 -0.894406 0 -0.4471877 -0.2763756 0.8506425 -0.4471877 0.7235938 0.5257118 -0.4471877 0.7235938 -0.5257118 -0.4471877 -0.2763756 -0.8506425 -0.4471877 0 0 -1</float_array>
+          <technique_common>
+            <accessor source="#Icosphere-mesh-normals-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Icosphere-mesh-map-0">
+          <float_array id="Icosphere-mesh-map-0-array" count="120">0.473226 0.07908916 0.3819823 0.3600364 0.5403246 0.3608978 0.6998897 0.3525689 0.473226 0.07908916 0.5403246 0.3608978 0.473226 0.07908916 0.2220197 0.3511531 0.3819823 0.3600364 0.473226 0.07908916 0.862141 0.3464674 0.2220197 0.3511531 0.473226 0.07908916 0.6998897 0.3525689 0.862141 0.3464674 0.5403246 0.3608978 0.6233499 0.5941594 0.6998897 0.3525689 0.3819823 0.3600364 0.4620164 0.592817 0.5403246 0.3608978 0.2220197 0.3511531 0.2985595 0.5927437 0.3819823 0.3600364 0.0594806 0.3464674 0.1389942 0.5844147 0.2220197 0.3511531 0.6998897 0.3525689 0.7833124 0.5852761 0.862141 0.3464674 0.5403246 0.3608978 0.4620164 0.592817 0.6233499 0.5941594 0.3819823 0.3600364 0.2985595 0.5927437 0.4620164 0.592817 0.2220197 0.3511531 0.1389942 0.5844147 0.2985595 0.5927437 0.862141 0.3464674 0.7833124 0.5852761 0.9416548 0.5844147 0.6998897 0.3525689 0.6233499 0.5941594 0.7833124 0.5852761 0.4620164 0.592817 0.8757618 0.8601952 0.6233499 0.5941594 0.2985595 0.5927437 0.07310146 0.8601952 0.4620164 0.592817 0.1389942 0.5844147 0.07310146 0.8601952 0.2985595 0.5927437 0.7833124 0.5852761 0.8757618 0.8601952 0.9416548 0.5844147 0.6233499 0.5941594 0.8757618 0.8601952 0.7833124 0.5852761</float_array>
+          <technique_common>
+            <accessor source="#Icosphere-mesh-map-0-array" count="60" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Icosphere-mesh-vertices">
+          <input semantic="POSITION" source="#Icosphere-mesh-positions"/>
+        </vertices>
+        <polylist material="Material" count="20">
+          <input semantic="VERTEX" source="#Icosphere-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Icosphere-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Icosphere-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>0 0 0 2 1 1 1 2 2 5 3 3 0 0 4 1 2 5 0 0 6 3 4 7 2 1 8 0 0 9 4 5 10 3 4 11 0 0 12 5 3 13 4 5 14 1 2 15 10 6 16 5 3 17 2 1 18 6 7 19 1 2 20 3 4 21 7 8 22 2 1 23 4 5 24 8 9 25 3 4 26 5 3 27 9 10 28 4 5 29 1 2 30 6 7 31 10 6 32 2 1 33 7 8 34 6 7 35 3 4 36 8 9 37 7 8 38 4 5 39 9 10 40 8 9 41 5 3 42 10 6 43 9 10 44 6 7 45 11 11 46 10 6 47 7 8 48 11 11 49 6 7 50 8 9 51 11 11 52 7 8 53 9 10 54 11 11 55 8 9 56 10 6 57 11 11 58 9 10 59</p>
+        </polylist>
+      </mesh>
+      <extra><technique profile="MAYA"><double_sided>1</double_sided></technique></extra>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Icosphere" type="NODE">
+        <translate sid="location">0 0 0</translate>
+        <rotate sid="rotationZ">0 0 1 0</rotate>
+        <rotate sid="rotationY">0 1 0 0</rotate>
+        <rotate sid="rotationX">1 0 0 0</rotate>
+        <scale sid="scale">2.801892 2.801892 2.801892</scale>
+        <instance_geometry url="#Icosphere-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material" target="#Material-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>

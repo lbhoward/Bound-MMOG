@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>Bound Login</title>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+	<body>
+		<p style="text-align: center;">
+			<strong><span style="font-size:16px;">Bound Login</span></strong>
+		<form action='/game' method='post' style ="text-align: center;">
+		Username: <input type='text' maxlength='16' name='name' /><br />
+		Password: <input type='password' maxlength='32' name='pass' /><br />
+		<input type='submit' value='Login' />
+		</form>
+		<form method="get" action="/register">
+			<p style="text-align: center;">
+			Not got an account? <br />
+			<button type="submit">Register</button>
+		</form>
+	</body>
+</html>

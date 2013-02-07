@@ -1,0 +1,8 @@
+On Login and Query:
+Server stores Database entry for login.
+
+On Connect:
+Client Connects. Emit ReadyState with Username.
+Server returns list of players minus username.
+
+Client gets indexof own Username.
