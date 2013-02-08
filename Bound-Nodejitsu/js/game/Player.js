@@ -11,7 +11,7 @@ function Player(modelPath, setLoc, setRot, setName){
 	//Animation Stuff
 	this.clock = new THREE.Clock();
 	this.t = 0;
-	this.currentFrame = 0; this.lastFrame = 0;
+	this.currentFrame = 0; this.lastFrame = 0; this.previousAnim = 0;
 	
 	var currentPlayer = this; //this. accessor for callback
 		
@@ -33,7 +33,8 @@ function Player(modelPath, setLoc, setRot, setName){
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
 		
-		animType = animation.animType;
+		if (animation.animType != this.previousAnim)
+			this.currentFrame = animation.startFrame;
 		
 		var delta = this.clock.getDelta();
 		
@@ -49,6 +50,6 @@ function Player(modelPath, setLoc, setRot, setName){
 			if (this.currentFrame >= animation.endFrame)
 				this.currentFrame = animation.startFrame;
 		
-		previousAnim = animation.animType;
+		this.previousAnim = animation.animType;
 	};
 };

@@ -49,6 +49,7 @@ socket.on('UPDATE', function(getPlayers) {
 
 socket.on('disconnect', function() {
 	console.log("Lost connection to server: You may have logged in from another location, or the server has terminated.");
+	window.history.back(-1);
 });
 
 //Search JSON Array for Matching Attribute, return index

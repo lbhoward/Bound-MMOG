@@ -7,7 +7,8 @@ var idleAnim = new Animation("idleAnim", 38, 58);
 
 //Boss Animations
 var bossIdleAnim = new Animation("bossIdleAnim", 0, 57);
-var bossFireballAnim = new Animation("bossFireballAnim", 58, 156);
+var bossFireballAnim = new Animation("bossFireballAnim", 58, 122);
+var bossFireballFinishAnim = new Animation("bossFireballFinishAnim", 122, 156);
 var bossFirestormAnim = new Animation("bossFirestormAnim", 157, 267);
 var bossFirecrushAnim = new Animation("bossFirecrushAnim", 268, 361);
 
@@ -55,7 +56,20 @@ function UpdatePlayers() {
 		boss.onScreen = true;
 	}
 	else if (boss.onScreen)
-		boss.update(bossFirecrushAnim);
+	{
+		if (boss.justCast == true)
+		{
+			boss.update(bossFireballFinishAnim);
+		}
+		else if (boss.isCasting == 0)
+			boss.update(bossIdleAnim);
+		else if (boss.isCasting == 1)
+			boss.update(bossFireballAnim);
+		else if (boss.isCasting == 2)
+			boss.update(bossFirestormAnim);
+		else if (boss.isCasting == 3)
+			boss.update(bossFirecrushAnim);
+	}
 }
 
 function HandleInput()

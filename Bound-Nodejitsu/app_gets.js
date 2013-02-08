@@ -1,4 +1,4 @@
-function app_gets(app, express, fs, login_mysql) {
+function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr) {
 
 	//Setup BodyParser
 	app.configure(function() {

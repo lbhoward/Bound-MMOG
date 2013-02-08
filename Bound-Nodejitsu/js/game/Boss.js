@@ -6,12 +6,15 @@ function Boss(modelPath)
 	this.model = 0;
 	this.readyState = false; this.onScreen = false;
 	
-	this.HP = 0;
+	//Game Variables
+	this.healthPoints = 1000;
+	this.isCasting = 0; //0 not casting - 1 casting fireball - 2 casting firestorm - 3 casting firecrush
+	this.justCast = false;
 	
 	//Animation Stuff
 	this.clock = new THREE.Clock();
 	this.t = 0;
-	this.currentFrame = 0; this.lastFrame = 0;
+	this.currentFrame = 0; this.lastFrame = 0; this.previousAnim = 0;
 	
 	var currentPlayer = this; //this. accessor for callback
 
@@ -33,7 +36,26 @@ function Boss(modelPath)
 	this.update = function(animation) {
 		this.model.rotation.y = this.rot.y;
 		
-		animType = animation.animType;
+		if (animation.animType != this.previousAnim)
+		{
+			//Jump back to Start of newly request animation
+			this.currentFrame = animation.startFrame;
+			
+			switch(animation.animType)
+			{
+				case "bossFireballFinishAnim":
+					this.fireBall();
+				break;
+				
+				case "bossFirestormAnim":
+					this.fireStorm();
+				break;
+				
+				case "bossFirecrushAnim":
+					this.fireCrush();
+				break;
+			}
+		}
 		
 		var delta = this.clock.getDelta();
 		
@@ -46,9 +68,50 @@ function Boss(modelPath)
 			this.lastFrame = this.currentFrame;
 			this.currentFrame++;
 			
-			if (this.currentFrame >= animation.endFrame)
-				this.currentFrame = animation.startFrame;
+			//Idle Animation Loop
+			if (this.isCasting == 0)
+			{
+				if (this.currentFrame >= animation.endFrame)
+					this.currentFrame = animation.startFrame;
+			}
+			else
+			{
+				switch (this.isCasting)
+				{
+					case 1:
+					{
+						if (animation.animType == "bossFireballAnim" && this.currentFrame == animation.endFrame)
+						{
+							this.justCast = true;
+						}
+						else if (animation.animType == "bossFireballFinishAnim" && this.currentFrame == animation.endFrame)
+						{
+							this.justCast = false;
+							this.isCasting = 0;
+						}
+					}
+					break;
+					
+					case 2:
+					if (this.currentFrame == animation.endFrame)
+						isCasting = 0;
+					break;
+					
+					case 3:
+						isCasting = 0;
+					break;
+				}
+			}
 		
-		previousAnim = animation.animType;
+		this.previousAnim = animation.animType;
+	};
+	
+	this.fireBall = function() {
+	};
+	
+	this.fireStorm = function() {
+	};
+	
+	this.fireCrush = function() {
 	};
 };

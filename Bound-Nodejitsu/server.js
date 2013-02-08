@@ -34,7 +34,7 @@ handleDisconnect(login_mysql);
 var getPlayers = new Array();
 var getCouplings = new Array();
 
-require('./app_gets').app_gets(app, express, fs, login_mysql);
+require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
 
 //Boss Doohickies
 var bossMaxHP = 1000;
