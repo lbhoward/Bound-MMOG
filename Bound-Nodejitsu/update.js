@@ -8,7 +8,7 @@ var idleAnim = new Animation("idleAnim", 38, 58);
 //Boss Animations
 var bossIdleAnim = new Animation("bossIdleAnim", 0, 57);
 var bossFireballAnim = new Animation("bossFireballAnim", 58, 122);
-var bossFireballFinishAnim = new Animation("bossFireballFinishAnim", 122, 156);
+var bossFireballFinishAnim = new Animation("bossFireballFinishAnim", 123, 156);
 var bossFirestormAnim = new Animation("bossFirestormAnim", 157, 267);
 var bossFirecrushAnim = new Animation("bossFirecrushAnim", 268, 361);
 
@@ -58,9 +58,7 @@ function UpdatePlayers() {
 	else if (boss.onScreen)
 	{
 		if (boss.justCast == true)
-		{
 			boss.update(bossFireballFinishAnim);
-		}
 		else if (boss.isCasting == 0)
 			boss.update(bossIdleAnim);
 		else if (boss.isCasting == 1)

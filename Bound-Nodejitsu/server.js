@@ -34,12 +34,12 @@ handleDisconnect(login_mysql);
 var getPlayers = new Array();
 var getCouplings = new Array();
 
+//App Get Initialisation (Request/Response Handling)
 require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
 
-//Boss Doohickies
-var bossMaxHP = 1000;
-
-//APP GETS
+//Boss Variables
+//var boss = require('./server_boss').Boss();
+//var CurrentBoss = boss();
 
 // Define a message handler
 io.sockets.on('connection', function (socket) {
@@ -51,10 +51,7 @@ io.sockets.on('connection', function (socket) {
 		console.log(getCouplings);
 		console.log(getPlayers);
   });
-  
-  setInterval(function() {
-		socket.emit('UPDATE', getPlayers); 
-  }, 45);
+
   socket.on('RESPOND', function(loc, rot) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
@@ -77,6 +74,15 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('PLAYER_LEFT', indexP);
   });
 });
+
+setInterval(function() {
+		var castAbility = Math.floor((Math.random()*3)+1);
+		io.sockets.emit('BOSS_CAST', castAbility);
+}, 8000);
+  
+  setInterval(function() {
+		io.sockets.emit('UPDATE', getPlayers); 
+  }, 45);
 
 //MySQL disconnects
 function handleDisconnect(connection) {

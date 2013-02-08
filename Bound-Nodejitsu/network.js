@@ -47,6 +47,10 @@ socket.on('UPDATE', function(getPlayers) {
 	}
 });
 
+socket.on('BOSS_CAST', function(castAbility) {
+	boss.isCasting = castAbility;
+});
+
 socket.on('disconnect', function() {
 	console.log("Lost connection to server: You may have logged in from another location, or the server has terminated.");
 	window.history.back(-1);

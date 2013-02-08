@@ -38,8 +38,6 @@ function Player(modelPath, setLoc, setRot, setName){
 		
 		var delta = this.clock.getDelta();
 		
-		var time = Date.now() * 0.001;
-		
 			this.model.morphTargetInfluences[this.lastFrame] = 0;
 			this.model.morphTargetInfluences[this.currentFrame] = 1;
 			//var currentFrame = animation.startFrame + Math.floor(time*animation.totalFrames);

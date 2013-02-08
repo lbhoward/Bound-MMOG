@@ -59,8 +59,6 @@ function Boss(modelPath)
 		
 		var delta = this.clock.getDelta();
 		
-		var time = Date.now() * 0.001;
-		
 			this.model.morphTargetInfluences[this.lastFrame] = 0;
 			this.model.morphTargetInfluences[this.currentFrame] = 1;
 			//var currentFrame = animation.startFrame + Math.floor(time*animation.totalFrames);
@@ -80,12 +78,13 @@ function Boss(modelPath)
 				{
 					case 1:
 					{
-						if (animation.animType == "bossFireballAnim" && this.currentFrame == animation.endFrame)
+						if (animation.animType == "bossFireballAnim" && this.currentFrame >= animation.endFrame)
 						{
 							this.justCast = true;
 						}
-						else if (animation.animType == "bossFireballFinishAnim" && this.currentFrame == animation.endFrame)
+						else if (animation.animType == "bossFireballFinishAnim" && this.currentFrame >= animation.endFrame)
 						{
+							console.log("The Fireball Animation has finished!");
 							this.justCast = false;
 							this.isCasting = 0;
 						}
@@ -93,12 +92,13 @@ function Boss(modelPath)
 					break;
 					
 					case 2:
-					if (this.currentFrame == animation.endFrame)
-						isCasting = 0;
+					if (this.currentFrame >= animation.endFrame)
+						this.isCasting = 0;
 					break;
 					
 					case 3:
-						isCasting = 0;
+					if (this.currentFrame >= animation.endFrame)
+						this.isCasting = 0;
 					break;
 				}
 			}
@@ -107,11 +107,14 @@ function Boss(modelPath)
 	};
 	
 	this.fireBall = function() {
+		console.log("The Boss casts Fireball!");
 	};
 	
 	this.fireStorm = function() {
+		console.log("The Boss casts Firestorm!");
 	};
 	
 	this.fireCrush = function() {
+		console.log("The Boss casts Firecrush!");
 	};
 };
