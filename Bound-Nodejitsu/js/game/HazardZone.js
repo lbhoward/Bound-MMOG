@@ -3,9 +3,11 @@ function HazardZone (setLoc, setRad) {
 	this.rad = setRad;
 	
 	this.model = 0;
-	this.readyState = false; this.onScreen = false;
+	this.readyState = false;
 	
 	var currentPlayer = this;
+	
+	this.aliveTime = 5;
 	
 	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
 	
@@ -17,10 +19,13 @@ function HazardZone (setLoc, setRad) {
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
 		currentPlayer.model.scale.set(10,10,10);
 		console.log("MODEL LOADED");
-		currentPlayer.readyState = true;
 		
 		scene.add(currentPlayer.model);
+		
+		currentPlayer.readyState = true;
 	});
 	
-	this.alive = true;
+	this.update = function(delta) {
+		this.aliveTime -= delta;
+	};
 }

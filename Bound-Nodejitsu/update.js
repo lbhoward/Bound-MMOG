@@ -12,6 +12,10 @@ var bossFireballFinishAnim = new Animation("bossFireballFinishAnim", 123, 156);
 var bossFirestormAnim = new Animation("bossFirestormAnim", 157, 267);
 var bossFirecrushAnim = new Animation("bossFirecrushAnim", 268, 361);
 
+//Delta
+var clock = new THREE.Clock();
+var delta;
+
 function PhysicsLoop() {
 	var cT = new Date().getTime();
 	dT = cT - lT;
@@ -33,6 +37,8 @@ function PhysicsLoop() {
 }
 
 function UpdatePlayers() {
+	delta = clock.getDelta();
+	
 	for (var i = 0; i < players.length; i++)
 	{
 		if (players[i].readyState == true && players[i].onScreen == false)
@@ -67,6 +73,22 @@ function UpdatePlayers() {
 			boss.update(bossFirestormAnim);
 		else if (boss.isCasting == 3)
 			boss.update(bossFirecrushAnim);
+	}
+	
+	for (var i = 0; i < hazards.length; i++)
+	{
+		if (hazards[i].readyState == true)
+		{
+			hazards[i].update(delta);
+			console.log("Updating Hazard: " + i + " - Current ActiveTime: " + hazards[i].aliveTime);
+			
+			if (hazards[i].aliveTime <= 0)
+			{
+				console.log("Deleting Hazard: " + i);
+				scene.remove(hazards[i].model);
+				hazards.splice(i,1);
+			}
+		}
 	}
 }
 
