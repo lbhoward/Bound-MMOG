@@ -92,7 +92,7 @@ setInterval(function() {
 				for (var i = 0; i < 8; i++)
 				{
 					var x = Math.floor((Math.random()*60)+5);
-					var y = 0;
+					var y = 0.05;
 					var z = Math.floor((Math.random()*60)+5);
 					castLocations.push({ "x":x, "y":y, "z":z});
 				}
