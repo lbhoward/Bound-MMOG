@@ -7,7 +7,7 @@ function HazardZone (setLoc, setRad) {
 	
 	var currentPlayer = this;
 	
-	new THREE.JSONLoader().load( modelPath, function( geometry, materials ) {
+	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
 	
 		var material = materials[0];
 		
@@ -18,6 +18,8 @@ function HazardZone (setLoc, setRad) {
 		currentPlayer.model.scale.set(10,10,10);
 		console.log("MODEL LOADED");
 		currentPlayer.readyState = true;
+		
+		scene.add(currentPlayer.model);
 	});
 	
 	this.alive = true;

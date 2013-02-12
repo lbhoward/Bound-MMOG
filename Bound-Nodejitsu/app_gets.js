@@ -123,6 +123,10 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 		res.writeHead(200, { 'Content-type': 'application/javascript'});
 		res.end(fs.readFileSync('./js/game/Boss.js'));
 	});
+	app.get('/js/game/HazardZone.js', function(req, res) {
+		res.writeHead(200, { 'Content-type': 'application/javascript'});
+		res.end(fs.readFileSync('./js/game/HazardZone.js'));
+	});
 	app.get('/drawing.js', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'application/javascript'});
 		res.end(fs.readFileSync('./drawing.js'));
@@ -150,6 +154,10 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 		res.writeHead(200, { 'Content-type': 'application/json'});
 		res.end(fs.readFileSync('./Models/Boss/boss.js'));
 	});
+	app.get('/Models/HazardZone/hazardzone.js', function(req, res) {
+		res.writeHead(200, { 'Content-type': 'application/json'});
+		res.end(fs.readFileSync('./Models/HazardZone/hazardzone.js'));
+	});
 	//Textures
 	app.get('/Models/PCs/male//male_tex.png', function(req, res) {
 		res.end(fs.readFileSync('./Models/PCs/male/male_tex.png'));
@@ -162,6 +170,9 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 	});
 	app.get('/Models/Boss//boss_tex.png', function(req, res) {
 		res.end(fs.readFileSync('./Models/Boss/rock_tex.png'));
+	});
+	app.get('/Models/HazardZone//hazard_tex.png', function(req, res) {
+		res.end(fs.readFileSync('./Models/HazardZone/hazard_tex.png'));
 	});
 }
 

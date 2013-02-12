@@ -11,6 +11,11 @@ function Boss(modelPath)
 	this.isCasting = 0; //0 not casting - 1 casting fireball - 2 casting firestorm - 3 casting firecrush
 	this.justCast = false;
 	
+	//Ability Targets
+	this.fireBallTarget = 0;
+	this.castLocations = new Array();
+	this.hazardZones = new Array();
+	
 	//Animation Stuff
 	this.clock = new THREE.Clock();
 	this.t = 0;
@@ -107,7 +112,7 @@ function Boss(modelPath)
 	};
 	
 	this.fireBall = function() {
-		console.log("The Boss casts Fireball!");
+		console.log("The Boss casts Fireball at " + this.fireBallTarget.name + "!");
 	};
 	
 	this.fireStorm = function() {

@@ -47,7 +47,26 @@ socket.on('UPDATE', function(getPlayers) {
 	}
 });
 
-socket.on('BOSS_CAST', function(castAbility) {
+socket.on('BOSS_CAST', function(castAbility, targetData) {	
+	switch(castAbility)
+	{
+		case 1:
+			boss.fireBallTarget = players[targetData];
+		break;
+		
+		case 2:
+			boss.castLocations = targetData;
+			for (var i = 0; i < targetData.length; i++)
+			{
+				new HazardZone(targetData[i], 5);
+			}
+		break;
+		
+		case 3:
+			boss.castLocations = targetData;
+		break;
+	}
+	
 	boss.isCasting = castAbility;
 });
 

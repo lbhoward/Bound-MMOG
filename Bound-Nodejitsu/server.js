@@ -75,9 +75,30 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
+//Controller for Boss Abilities
 setInterval(function() {
 		var castAbility = Math.floor((Math.random()*3)+1);
-		io.sockets.emit('BOSS_CAST', castAbility);
+		var fireBallTarget;
+		var castLocations = new Array();
+		
+		switch (castAbility)
+		{
+			case 1:
+				fireBallTarget = Math.floor((Math.random()*getPlayers.length));
+				io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
+			break;
+			
+			case 2:
+				for (var i = 0; i < 8; i++)
+				{
+					var x = Math.floor((Math.random()*60)+5);
+					var y = 0;
+					var z = Math.floor((Math.random()*60)+5);
+					castLocations.push({ "x":x, "y":y, "z":z});
+				}
+				io.sockets.emit('BOSS_CAST', castAbility, castLocations);
+			break;
+		}
 }, 8000);
   
   setInterval(function() {
