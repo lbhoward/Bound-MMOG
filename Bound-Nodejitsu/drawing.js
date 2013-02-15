@@ -6,10 +6,7 @@ var webglRenderer;
 
 function init() {
 	console.log("Initiliasing Bound... Please Wait...");
-
-	container = document.createElement( 'div' );
-	document.body.appendChild( container );
-
+	
 	// camera
 	camera = new THREE.PerspectiveCamera( 70, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
 	camera.rotation.x = -0.5;
@@ -38,6 +35,9 @@ function init() {
 	
 	loadModel("Models/Arena/Arena.dae", 40);
 	loadModel("Models/Skydome/Skydome.dae", 1000);
+	
+	//GUI
+	InitGUI();
 	
 	PhysicsLoop();
 }

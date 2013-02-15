@@ -7,6 +7,7 @@ function Player(modelPath, setLoc, setRot, setName){
 	this.readyState = false; this.onScreen = false;
 	//Identifier
 	this.name = setName;
+	this.health = 100; this.damageTimer = 1.5; this.inAOE = false;
 	
 	//Animation Stuff
 	this.clock = new THREE.Clock();
@@ -29,14 +30,23 @@ function Player(modelPath, setLoc, setRot, setName){
 		currentPlayer.readyState = true;
 	});
 		
-	this.update = function(animation) {
+	this.update = function(animation, delta) {
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
 		
+		if (this.inAOE == true)
+		{
+			this.damageTimer -= delta;
+			
+			if (this.damageTimer <= 0)
+			{
+				this.damageTimer = 1.5;
+				this.inAOE = false;
+			}
+		}
+		
 		if (animation.animType != this.previousAnim)
 			this.currentFrame = animation.startFrame;
-		
-		var delta = this.clock.getDelta();
 		
 			this.model.morphTargetInfluences[this.lastFrame] = 0;
 			this.model.morphTargetInfluences[this.currentFrame] = 1;

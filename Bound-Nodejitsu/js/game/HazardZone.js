@@ -17,7 +17,7 @@ function HazardZone (setLoc, setRad) {
 		
 		currentPlayer.model = new THREE.Mesh( geometry, faceMaterial );
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
-		currentPlayer.model.scale.set(10,10,10);
+		currentPlayer.model.scale.set(40,40,40);
 		console.log("MODEL LOADED");
 		
 		scene.add(currentPlayer.model);

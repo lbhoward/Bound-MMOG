@@ -50,9 +50,9 @@ function UpdatePlayers() {
 		else if (players[i].onScreen)
 		{
 			if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
-				players[i].update(walkAnim);
+				players[i].update(walkAnim, delta);
 			else
-				players[i].update(idleAnim);
+				players[i].update(idleAnim, delta);
 		}
 	}
 	

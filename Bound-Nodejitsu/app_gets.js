@@ -99,6 +99,10 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 		res.writeHead(200, { 'Content-type': 'application/javascript'});
 		res.end(fs.readFileSync('./js/RequestAnimationFrame.js'));
 	});
+	app.get('/js/raphael-min.js', function(req, res) {
+		res.writeHead(200, { 'Content-type': 'application/javascript'});
+		res.end(fs.readFileSync('./js/raphael-min.js'));
+	});
 	app.get('/js/build/three.min.js', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'application/javascript'});
 		res.end(fs.readFileSync('./js/build/three.min.js'));
@@ -138,6 +142,10 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 	app.get('/update.js', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'application/javascript'});
 		res.end(fs.readFileSync('./update.js'));
+	});
+	app.get('/gui.js', function(req, res) {
+		res.writeHead(200, { 'Content-type': 'application/javascript'});
+		res.end(fs.readFileSync('./gui.js'));
 	});
 	//Models
 	app.get('/Models/PCs/male/male.js', function(req, res) {

@@ -90,31 +90,17 @@ setInterval(function() {
 			break;
 			
 			case 2:
-				for (var i = 0; i < 8; i++)
-				{
-					var positiveX = Math.floor(Math.random()*2);
-					var positiveZ = Math.floor(Math.random()*2);
-					
-					switch (positiveX)
-					{
-						case 0:
-							var x = Math.floor((Math.random()*150)+5);
-							break;
-						case 1:
-							var x = Math.floor((Math.random()*150)+5)*-1;
-							break;
-					}
-					switch (positiveZ)
-					{
-						case 0:
-							var z = Math.floor((Math.random()*150)+5);
-							break;
-						case 1:
-							var z = Math.floor((Math.random()*150)+5)*-1;
-							break;
-					}
+				var theta = 0; var radius = Math.floor(Math.random()*300)+60; var count = 0;
+				var thetaOffset = Math.floor(Math.random()*180);
+			
+				for (var i = 0; i < 360; i+=30)
+				{					
+					var x = radius*Math.cos(theta+thetaOffset);
+					var z = radius*Math.sin(theta+thetaOffset);
 					var y = 0.05;
-
+					
+					theta+= 30;
+					
 					castLocations.push({ "x":x, "y":y, "z":z});
 				}
 				io.sockets.emit('BOSS_CAST', castAbility, castLocations);
