@@ -80,11 +80,9 @@ function UpdatePlayers() {
 		if (hazards[i].readyState == true)
 		{
 			hazards[i].update(delta);
-			console.log("Updating Hazard: " + i + " - Current ActiveTime: " + hazards[i].aliveTime);
 			
 			if (hazards[i].aliveTime <= 0)
 			{
-				console.log("Deleting Hazard: " + i);
 				scene.remove(hazards[i].model);
 				hazards.splice(i,1);
 			}

@@ -77,7 +77,8 @@ io.sockets.on('connection', function (socket) {
 
 //Controller for Boss Abilities
 setInterval(function() {
-		var castAbility = Math.floor((Math.random()*3)+1);
+		//var castAbility = Math.floor((Math.random()*1));
+		var castAbility = 2;
 		var fireBallTarget;
 		var castLocations = new Array();
 		
@@ -91,9 +92,29 @@ setInterval(function() {
 			case 2:
 				for (var i = 0; i < 8; i++)
 				{
-					var x = Math.floor((Math.random()*60)+5);
+					var positiveX = Math.floor(Math.random()*2);
+					var positiveZ = Math.floor(Math.random()*2);
+					
+					switch (positiveX)
+					{
+						case 0:
+							var x = Math.floor((Math.random()*150)+5);
+							break;
+						case 1:
+							var x = Math.floor((Math.random()*150)+5)*-1;
+							break;
+					}
+					switch (positiveZ)
+					{
+						case 0:
+							var z = Math.floor((Math.random()*150)+5);
+							break;
+						case 1:
+							var z = Math.floor((Math.random()*150)+5)*-1;
+							break;
+					}
 					var y = 0.05;
-					var z = Math.floor((Math.random()*60)+5);
+
 					castLocations.push({ "x":x, "y":y, "z":z});
 				}
 				io.sockets.emit('BOSS_CAST', castAbility, castLocations);
