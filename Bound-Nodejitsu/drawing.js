@@ -4,6 +4,9 @@ var SCREEN_HEIGHT = window.innerHeight;
 var camera, scene;
 var webglRenderer;
 
+var GUI = document.createElement('div');
+//var ctx = GUI.getContext('2d');
+
 function init() {
 	console.log("Initiliasing Bound... Please Wait...");
 	
@@ -17,11 +20,13 @@ function init() {
 	// lights
 	var ambient = new THREE.AmbientLight( 0xffffff );
 	scene.add( ambient );
+	
 
 	// renderer
 	webglRenderer = new THREE.WebGLRenderer();
 	webglRenderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-	webglRenderer.domElement.style.position = "relative";
+	webglRenderer.domElement.style.position = "fixed";
+	webglRenderer.domElement.id = "webGL";
 	container.appendChild( webglRenderer.domElement );
 	
 	// joystick
@@ -33,11 +38,23 @@ function init() {
 	});
 	joystick._lastRotation = players[apIndex].rot.y;
 	
+	//GUI
+	GUI.id = "GUI";
+	GUI.width = SCREEN_WIDTH;
+	GUI.height = SCREEN_HEIGHT;
+	//ctx.beginPath(); 
+	//ctx.strokeStyle	= "#BDBDBD"; 
+	//ctx.lineWidth	= 6; 
+	//ctx.arc( GUI.width/2, GUI.width/2, 40, 0, Math.PI*2, true); 
+	//ctx.stroke();
+	
+	InitGUI(GUI);
+	container.appendChild(GUI);
+	GUI.style.position = "fixed";
+	GUI.style.display = "";
+	
 	loadModel("Models/Arena/Arena.dae", 40);
 	loadModel("Models/Skydome/Skydome.dae", 1000);
-	
-	//GUI
-	InitGUI();
 	
 	PhysicsLoop();
 }
