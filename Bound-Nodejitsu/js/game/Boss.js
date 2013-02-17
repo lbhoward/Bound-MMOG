@@ -113,6 +113,7 @@ function Boss(modelPath)
 	
 	this.fireBall = function() {
 		console.log("The Boss casts Fireball at " + this.fireBallTarget.name + "!");
+		socket.emit('TAKE_DAMAGE', this.fireBallTarget.name);
 	};
 	
 	this.fireStorm = function() {

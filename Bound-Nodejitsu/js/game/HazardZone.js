@@ -7,7 +7,7 @@ function HazardZone (setLoc, setRad) {
 	
 	var currentPlayer = this;
 	
-	this.aliveTime = 5;
+	this.aliveTime = 6;
 	
 	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
 	

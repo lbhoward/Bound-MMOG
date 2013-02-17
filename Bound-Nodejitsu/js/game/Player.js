@@ -1,4 +1,4 @@
-function Player(modelPath, setLoc, setRot, setName){
+function Player(modelPath, setLoc, setRot, setName, setHP){
 	//Location and rotation vectors
 	this.loc = new Vector3(setLoc.x, setLoc.y, setLoc.z) || new Vector3();
 	this.rot = new Vector3(setRot.x, setRot.y, setRot.z) || new Vector3();
@@ -7,7 +7,8 @@ function Player(modelPath, setLoc, setRot, setName){
 	this.readyState = false; this.onScreen = false;
 	//Identifier
 	this.name = setName;
-	this.health = 100; this.damageTimer = 1.5; this.inAOE = false;
+	this.health = setHP; this.damageTimer = 0; this.inAOE = false;
+	this.rad = 15;
 	
 	//Animation Stuff
 	this.clock = new THREE.Clock();
@@ -34,15 +35,17 @@ function Player(modelPath, setLoc, setRot, setName){
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
 		
-		if (this.inAOE == true)
-		{
-			this.damageTimer -= delta;
+		this.damageTimer -= delta;
 			
-			if (this.damageTimer <= 0)
+		if (this.damageTimer <= 0)
+		{
+			if (this.inAOE == true)
 			{
-				this.damageTimer = 1.5;
-				this.inAOE = false;
+				socket.emit('TAKE_DAMAGE');
+				this.damageTimer = 1.25;
 			}
+			else
+				this.damageTimer = 0;
 		}
 		
 		if (animation.animType != this.previousAnim)

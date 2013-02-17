@@ -60,12 +60,28 @@ io.sockets.on('connection', function (socket) {
 		getPlayers[indexP].R = rot.y;
   });
   
+  socket.on('HEAL_PLAYER', function(name) {
+		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
+		getPlayers[indexP].HP += 5;
+		
+		if (getPlayers[indexP].HP > 100)
+			getPlayers[indexP].HP = 100;
+  });
+  
+  socket.on('TAKE_DAMAGE', function() {
+		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
+		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
+		
+		getPlayers[indexP].HP -= 15;
+  });
+  
   socket.on('disconnect', function() {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		login_mysql.query('UPDATE lawrence_bound.logins SET X=\'' + getPlayers[indexP].X + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
 		login_mysql.query('UPDATE lawrence_bound.logins SET Z=\'' + getPlayers[indexP].Z + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
 		login_mysql.query('UPDATE lawrence_bound.logins SET R=\'' + getPlayers[indexP].R + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
+		login_mysql.query('UPDATE lawrence_bound.logins SET HP=\'' + getPlayers[indexP].HP + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
 		getCouplings.splice(indexC,1);
 		getPlayers.splice(indexP,1);
 		
@@ -77,8 +93,8 @@ io.sockets.on('connection', function (socket) {
 
 //Controller for Boss Abilities
 setInterval(function() {
-		//var castAbility = Math.floor((Math.random()*1));
-		var castAbility = 2;
+		var castAbility = Math.floor((Math.random()*2)+1);
+		//var castAbility = 2;
 		var fireBallTarget;
 		var castLocations = new Array();
 		

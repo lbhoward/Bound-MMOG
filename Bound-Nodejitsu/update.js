@@ -23,6 +23,9 @@ function PhysicsLoop() {
 	//Move Player
 	HandleInput();
 	
+	//Collisions
+	HandleCollisions();
+	
 	//Update Server
 	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get());
 	
@@ -30,8 +33,9 @@ function PhysicsLoop() {
 	UpdatePlayers();
 	
 	//Update Render
+	DrawBars();
 	webglRenderer.render( scene, camera );
-
+	
 	lT = cT;
 	requestAnimationFrame(PhysicsLoop);
 }
@@ -95,4 +99,18 @@ function HandleInput()
 	players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((joystick.deltaX()/500)*dT), 0, players[apIndex].loc.z + ((joystick.deltaY()/500)*dT));
 	camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
 	players[apIndex].rot.y = joystick.rotation();
+}
+
+function HandleCollisions()
+{
+		for (var j = 0; j < hazards.length; j++)
+		{
+			if ( Math.pow(players[apIndex].loc.x - hazards[j].loc.x,2) + Math.pow(hazards[j].loc.z - players[apIndex].loc.z,2) <= Math.pow(hazards[j].rad + players[apIndex].rad,2) )
+			{
+				players[apIndex].inAOE = true;
+				break;
+			}
+			else
+				players[apIndex].inAOE = false;
+		}
 }

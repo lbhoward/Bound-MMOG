@@ -200,7 +200,7 @@ VirtualJoystick.prototype._onMouseUp	= function(event)
 }
 
 VirtualJoystick.prototype._onMouseDown	= function(event)
-{
+{	
 	var x	= event.clientX;
 	var y	= event.clientY;
 	
