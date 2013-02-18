@@ -27,6 +27,7 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 		
 		var faceMaterial = new THREE.MeshFaceMaterial( materials );
 		
+		geometry.computeCentroids();
 		currentPlayer.model = new THREE.SkinnedMesh( geometry, faceMaterial );
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
 		currentPlayer.model.scale.set(10,10,10);

@@ -34,6 +34,10 @@ handleDisconnect(login_mysql);
 var getPlayers = new Array();
 var getCouplings = new Array();
 
+//Boss variables
+var bossBaseHP = 100;
+var bossCurHP = bossBaseHP;
+
 //App Get Initialisation (Request/Response Handling)
 require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
 
@@ -68,6 +72,14 @@ io.sockets.on('connection', function (socket) {
 			getPlayers[indexP].HP = 100;
   });
   
+  socket.on('REZ_PLAYER', function(name) {
+		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
+		getPlayers[indexP].HP += 50;
+		
+		if (getPlayers[indexP].HP > 50)
+			getPlayers[indexP].HP = 50;
+  });
+  
   socket.on('TAKE_DAMAGE', function() {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
@@ -76,6 +88,10 @@ io.sockets.on('connection', function (socket) {
 		
 		if (getPlayers[indexP].HP < 0)
 			getPlayers[indexP].HP = 0;
+  });
+  
+  socket.on('HIT_BOSS', function() {
+		bossCurHP -= 5;
   });
   
   socket.on('disconnect', function() {

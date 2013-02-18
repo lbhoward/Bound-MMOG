@@ -16,6 +16,7 @@ function init() {
 
 	//scene
 	scene = new THREE.Scene();
+	projector = new THREE.Projector();
 
 	// lights
 	var ambient = new THREE.AmbientLight( 0xffffff );

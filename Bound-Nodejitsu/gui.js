@@ -18,46 +18,90 @@ function SetupTouch() {
 
 var HandleMouseDown = function(event) {
 	event.preventDefault();
-	console.log("Clicky");
 	var x	= event.clientX;
 	var y	= event.clientY;
 	
-	for (var i = 0; i < players.length; i++)
+	if (players[apIndex].justHealed == false)
 	{
-		if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-			if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
-			{
-				if (players[apIndex].justHealed == false && players[i].health < 100)
+		for (var i = 0; i < players.length; i++)
+		{
+			if (x > 5 && x < (SCREEN_WIDTH/8)+5)
+				if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
 				{
+					if (players[i].health > 0 && players[i].health < 100)
+					{	
 						socket.emit('HEAL_PLAYER', players[i].name);
 						players[apIndex].justHealed = true;
+					}
+					else if (players[apIndex].justRezzed == false && players[i].health == 0)
+					{
+						socket.emit ('REZ_PLAYER', players[i].name);
+						players[apIndex].justRezzed = true;
+					}
 				}
-			}
+		}
+	}
+	
+	var vector = new THREE.Vector3( x, y, 1);
+	projector.unprojectVector(vector, camera);
+	
+	var subbedVector = vector.sub( camera.position )
+	
+	var raycaster = new THREE.Ray( camera.position, vector.sub( camera.position ).normalize() );
+	var intersects = raycaster.intersectObjects( scene.children );
+	
+	if ( intersects.length > 0 ) {
+		for (var i = 0; i < intersects.length; i++)
+			console.log("Total Intersections: " + intersects.length + " - Intersected: " + intersects[i].object.id);
+	
+		if ( intersects[0].object.id == boss.model.id )
+		{
+			socket.emit('HIT_BOSS');
+			console.log("Picked the Boss");
+		}
 	}
 };
 
 var HandleTouchDown = function(event) {
 	event.preventDefault();
-	console.log("Clicky");
 	var x	= event.touches[0].pageX;
 	var y	= event.touches[0].pageY;
 	
-	for (var i = 0; i < players.length; i++)
+	if (players[apIndex].justHealed == false)
 	{
-		if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-			if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
-			{
-				if (players[apIndex].justHealed == false && (players[i].health < 100 && players[i].health > 0))
+		for (var i = 0; i < players.length; i++)
+		{
+			if (x > 5 && x < (SCREEN_WIDTH/8)+5)
+				if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
 				{
+					if (players[i].health > 1)
+					{
+						console.log("Players Health was: " + players[i].health);	
 						socket.emit('HEAL_PLAYER', players[i].name);
 						players[apIndex].justHealed = true;
+					}
+					else if (players[apIndex].justRezzed == false)
+					{
+						console.log("REZZING!");
+						socket.emit ('REZ_PLAYER', players[i].name);
+						players[apIndex].justRezzed = true;
+					}
 				}
-				else if (players[i].health == 0 && players[apIndex].justRezzed == false)
-				{
-					socket.emit ('REZ_PLAYER', players[i].name);
-					players[apIndex].justRezzed = true;
-				}
-			}
+		}
+	}
+	
+	var vector = new THREE.Vector3( x, y, 1);
+	projector.unprojectVector(vector, camera);
+	
+	var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+	var intersects = raycaster.intersectObjects( scene.children );
+	
+	if ( intersects.length > 0 ) {
+		if ( intersects[0].object == boss.model )
+		{
+			socket.emit('HIT_BOSS');
+			console.log("Picked the Boss");
+		}
 	}
 };
 
