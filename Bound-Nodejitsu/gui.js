@@ -47,7 +47,7 @@ var HandleMouseDown = function(event) {
 	
 	var subbedVector = vector.sub( camera.position )
 	
-	var raycaster = new THREE.Ray( camera.position, vector.sub( camera.position ).normalize() );
+	var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 	var intersects = raycaster.intersectObjects( scene.children );
 	
 	if ( intersects.length > 0 ) {

@@ -30,7 +30,6 @@ function Boss(modelPath)
 		
 		var faceMaterial = new THREE.MeshFaceMaterial( materials );
 		
-		geometry.computeCentroids();
 		currentPlayer.model = new THREE.SkinnedMesh( geometry, faceMaterial );
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
 		currentPlayer.model.scale.set(70,70,70);
