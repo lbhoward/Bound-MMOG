@@ -11,6 +11,7 @@ var bossFireballAnim = new Animation("bossFireballAnim", 58, 122);
 var bossFireballFinishAnim = new Animation("bossFireballFinishAnim", 123, 156);
 var bossFirestormAnim = new Animation("bossFirestormAnim", 157, 267);
 var bossFirecrushAnim = new Animation("bossFirecrushAnim", 268, 361);
+var bossDead = new Animation("bossDead", 360, 361);
 
 //Delta
 var clock = new THREE.Clock();
@@ -67,7 +68,9 @@ function UpdatePlayers() {
 	}
 	else if (boss.onScreen)
 	{
-		if (boss.justCast == true)
+		if (boss.health == 0)
+			boss.update(bossDead);
+		else if (boss.justCast == true)
 			boss.update(bossFireballFinishAnim);
 		else if (boss.isCasting == 0)
 			boss.update(bossIdleAnim);

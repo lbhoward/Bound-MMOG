@@ -30,7 +30,6 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 		currentPlayer.model = new THREE.SkinnedMesh( geometry, faceMaterial );
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
 		currentPlayer.model.scale.set(10,10,10);
-		console.log("MODEL LOADED");
 		currentPlayer.readyState = true;
 	});
 		

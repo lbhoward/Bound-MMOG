@@ -47,7 +47,7 @@ require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplin
 
 // Define a message handler
 io.sockets.on('connection', function (socket) {
-  socket.emit('CON_ACCEPT', getPlayers); //Emit the list of players to the client that just connected
+  socket.emit('CON_ACCEPT', getPlayers, bossCurHP); //Emit the list of players to the client that just connected
   
   socket.on('REGISTER', function(NAME) {
 		var index = findWithAttr(getPlayers, 'USERNAME', NAME);
@@ -92,6 +92,9 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('HIT_BOSS', function() {
 		bossCurHP -= 5;
+		
+		if (bossCurHP < 0)
+			bossCurHP = 0;
   });
   
   socket.on('disconnect', function() {
@@ -112,39 +115,42 @@ io.sockets.on('connection', function (socket) {
 
 //Controller for Boss Abilities
 setInterval(function() {
-		var castAbility = Math.floor((Math.random()*2)+1);
-		//var castAbility = 2;
-		var fireBallTarget;
-		var castLocations = new Array();
-		
-		switch (castAbility)
+		if (bossCurHP > 0)
 		{
-			case 1:
-				fireBallTarget = Math.floor((Math.random()*getPlayers.length));
-				io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
-			break;
+			var castAbility = Math.floor((Math.random()*2)+1);
+			//var castAbility = 2;
+			var fireBallTarget;
+			var castLocations = new Array();
 			
-			case 2:
-				var theta = 0; var radius = Math.floor(Math.random()*300)+60; var count = 0;
-				var thetaOffset = Math.floor(Math.random()*180);
-			
-				for (var i = 0; i < 360; i+=30)
-				{					
-					var x = radius*Math.cos(theta+thetaOffset);
-					var z = radius*Math.sin(theta+thetaOffset);
-					var y = 0.05;
-					
-					theta+= 30;
-					
-					castLocations.push({ "x":x, "y":y, "z":z});
-				}
-				io.sockets.emit('BOSS_CAST', castAbility, castLocations);
-			break;
+			switch (castAbility)
+			{
+				case 1:
+					fireBallTarget = Math.floor((Math.random()*getPlayers.length));
+					io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
+				break;
+				
+				case 2:
+					var theta = 0; var radius = Math.floor(Math.random()*300)+60; var count = 0;
+					var thetaOffset = Math.floor(Math.random()*180);
+				
+					for (var i = 0; i < 360; i+=30)
+					{					
+						var x = radius*Math.cos(theta+thetaOffset);
+						var z = radius*Math.sin(theta+thetaOffset);
+						var y = 0.05;
+						
+						theta+= 30;
+						
+						castLocations.push({ "x":x, "y":y, "z":z});
+					}
+					io.sockets.emit('BOSS_CAST', castAbility, castLocations);
+				break;
+			}
 		}
 }, 8000);
   
   setInterval(function() {
-		io.sockets.emit('UPDATE', getPlayers); 
+		io.sockets.emit('UPDATE', getPlayers, bossCurHP); 
   }, 45);
 
 //MySQL disconnects

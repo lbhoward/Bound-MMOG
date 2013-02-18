@@ -7,6 +7,8 @@ var webglRenderer;
 var GUI = document.createElement('canvas');
 var ctx = GUI.getContext('2d');
 
+var arenaModel, maleModel, bossModel, hazardModel;
+
 function init() {
 	console.log("Initiliasing Bound... Please Wait...");
 	
@@ -16,12 +18,10 @@ function init() {
 
 	//scene
 	scene = new THREE.Scene();
-	projector = new THREE.Projector();
 
 	// lights
 	var ambient = new THREE.AmbientLight( 0xffffff );
 	scene.add( ambient );
-	
 
 	// renderer
 	webglRenderer = new THREE.WebGLRenderer();
@@ -50,8 +50,8 @@ function init() {
 	});
 	joystick._lastRotation = players[apIndex].rot.y;
 	
-	loadModel("Models/Arena/Arena.dae", 40);
-	loadModel("Models/Skydome/Skydome.dae", 1000);
+	loadDAEModel("Models/Arena/Arena.dae", 40);
+	//loadJSONModel("Models/HazardZone/hazardzone.js", hazardModel, 10);
 	
 	camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
 	
@@ -59,14 +59,28 @@ function init() {
 	
 	PhysicsLoop();
 }
-function loadModel(modelPath, scale) {
+function loadDAEModel(modelPath, scale) {
 new THREE.ColladaLoader().load(modelPath,
 		function(collada) {
 			var model = collada.scene;
 			model.scale.set(scale, scale, scale);
 			model.rotation.x = -Math.PI/2;
 			scene.add(model);
-			console.log(modelPath + ": Loaded");
+	});
+}
+
+function loadJSONModel(modelPath, assign, scale) {
+new THREE.JSONLoader().load( modelPath, function( geometry, materials ) {
+	
+		var material = materials[0];
+		material.morphTargets = true;
+		
+		var faceMaterial = new THREE.MeshFaceMaterial( materials );
+		
+		var model = new THREE.SkinnedMesh( geometry, faceMaterial );
+		model.scale.set(scale,scale,scale);
+		
+		assign = model;
 	});
 }
 

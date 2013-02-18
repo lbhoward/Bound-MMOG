@@ -42,24 +42,13 @@ var HandleMouseDown = function(event) {
 		}
 	}
 	
-	var vector = new THREE.Vector3( x, y, 1);
-	projector.unprojectVector(vector, camera);
-	
-	var subbedVector = vector.sub( camera.position )
-	
-	var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-	var intersects = raycaster.intersectObjects( scene.children );
-	
-	if ( intersects.length > 0 ) {
-		for (var i = 0; i < intersects.length; i++)
-			console.log("Total Intersections: " + intersects.length + " - Intersected: " + intersects[i].object.id);
-	
-		if ( intersects[0].object.id == boss.model.id )
-		{
-			socket.emit('HIT_BOSS');
-			console.log("Picked the Boss");
-		}
-	}
+	if (players[apIndex].justAttacked == false)
+		if (x > iconX && x < SCREEN_WIDTH)
+			if (y > iconSize && y < iconSize*2)
+			{
+				socket.emit('HIT_BOSS');
+				players[apIndex].justAttacked = true;
+			}
 };
 
 var HandleTouchDown = function(event) {
@@ -90,19 +79,13 @@ var HandleTouchDown = function(event) {
 		}
 	}
 	
-	var vector = new THREE.Vector3( x, y, 1);
-	projector.unprojectVector(vector, camera);
-	
-	var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-	var intersects = raycaster.intersectObjects( scene.children );
-	
-	if ( intersects.length > 0 ) {
-		if ( intersects[0].object == boss.model )
-		{
-			socket.emit('HIT_BOSS');
-			console.log("Picked the Boss");
-		}
-	}
+		if (players[apIndex].justAttacked == false)
+		if (x > iconX && x < SCREEN_WIDTH)
+			if (y > iconSize && y < iconSize*2)
+			{
+				socket.emit('HIT_BOSS');
+				players[apIndex].justAttacked = true;
+			}
 };
 
 function DrawBars() {
@@ -127,6 +110,23 @@ function DrawBars() {
 		ctx.fillStyle = 'rgba(0,255,0,1)';
 		ctx.fill();
 	}
+	
+	//Boss Bar (Stroke + Empty)
+	ctx.beginPath();
+	ctx.rect( ((SCREEN_WIDTH/2) - (SCREEN_WIDTH/8)), 5,
+				SCREEN_WIDTH/4, SCREEN_HEIGHT/16 );
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 1;
+	ctx.fillStyle = 'rgba(255,0,0,0)';
+	ctx.fill();
+	ctx.stroke();
+	
+	//Boss Bar (No Stroke + Fill)
+	ctx.beginPath()
+	ctx.rect( ((SCREEN_WIDTH/2) - (SCREEN_WIDTH/8)), 5,
+				(SCREEN_WIDTH/4)*(boss.health/100), SCREEN_HEIGHT/16 );
+	ctx.fillStyle = 'rgba(255,0,0,1)';
+	ctx.fill();
 	
 	DrawIcons();
 };

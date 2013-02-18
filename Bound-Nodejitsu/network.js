@@ -7,7 +7,7 @@ var apIndex;
 var socket = io.connect();
 
 socket.on('connect', function () {
-	socket.on('CON_ACCEPT', function(getPlayers) {
+	socket.on('CON_ACCEPT', function(getPlayers, bossHP) {
 		
 		for (var i = 0; i < getPlayers.length; i++)
 		{
@@ -18,7 +18,7 @@ socket.on('connect', function () {
 			}
 		}
 		
-		boss = new Boss("Models/Boss/boss.js");
+		boss = new Boss("Models/Boss/boss.js", bossHP);
 		
 		socket.emit('REGISTER', playerName);
 		init();
@@ -33,7 +33,7 @@ socket.on('PLAYER_LEFT' , function(plIndex) {
 	console.log("Player left: New apIndex is: " + apIndex);
 });
 
-socket.on('UPDATE', function(getPlayers) {
+socket.on('UPDATE', function(getPlayers, bossHP) {
 	for (var i = 0; i < getPlayers.length; i++)
 	{	
 		if (players[i] == undefined)
@@ -48,6 +48,7 @@ socket.on('UPDATE', function(getPlayers) {
 		}
 		players[i].health = getPlayers[i].HP;
 	}
+	boss.health = bossHP;
 });
 
 socket.on('BOSS_CAST', function(castAbility, targetData) {	

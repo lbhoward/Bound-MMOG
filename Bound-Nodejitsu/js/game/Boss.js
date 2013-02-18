@@ -1,4 +1,4 @@
-function Boss(modelPath)
+function Boss(modelPath, hp)
 {
 	this.loc = new Vector3();
 	this.rot = new Vector3();
@@ -7,7 +7,7 @@ function Boss(modelPath)
 	this.readyState = false; this.onScreen = false;
 	
 	//Game Variables
-	this.healthPoints = 1000;
+	this.health = hp;
 	this.isCasting = 0; //0 not casting - 1 casting fireball - 2 casting firestorm - 3 casting firecrush
 	this.justCast = false;
 	
@@ -33,7 +33,6 @@ function Boss(modelPath)
 		currentPlayer.model = new THREE.SkinnedMesh( geometry, faceMaterial );
 		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
 		currentPlayer.model.scale.set(70,70,70);
-		console.log("MODEL LOADED");
 		currentPlayer.readyState = true;
 	});
 	
