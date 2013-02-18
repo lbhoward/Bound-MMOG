@@ -62,7 +62,7 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('HEAL_PLAYER', function(name) {
 		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
-		getPlayers[indexP].HP += 5;
+		getPlayers[indexP].HP += 10;
 		
 		if (getPlayers[indexP].HP > 100)
 			getPlayers[indexP].HP = 100;
@@ -73,6 +73,9 @@ io.sockets.on('connection', function (socket) {
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
 		getPlayers[indexP].HP -= 15;
+		
+		if (getPlayers[indexP].HP < 0)
+			getPlayers[indexP].HP = 0;
   });
   
   socket.on('disconnect', function() {

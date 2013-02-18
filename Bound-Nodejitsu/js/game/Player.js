@@ -8,6 +8,9 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 	//Identifier
 	this.name = setName;
 	this.health = setHP; this.damageTimer = 0; this.inAOE = false;
+	this.healTimer = 1.5; this.justHealed = false;
+	this.attackTimer = 1.0; this.justAttacked = false;
+	this.rezTimer = 120; this.justRezzed = false;
 	this.rad = 15;
 	
 	//Animation Stuff
@@ -36,6 +39,37 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 		this.model.rotation.y = this.rot.y;
 		
 		this.damageTimer -= delta;
+		
+		if (this.justHealed)
+		{
+			this.healTimer -= delta;
+			
+			if (this.healTimer <= 0)
+			{
+				this.healTimer = 1.5;
+				this.justHealed = false;
+			}
+		}
+		if (this.justAttacked)
+		{
+			this.attackTimer -= delta;
+			
+			if (this.attackTimer <= 0)
+			{
+				this.attackTimer = 1.0;
+				this.justAttacked = false;
+			}
+		}
+		if (this.justRezzed)
+		{
+			this.rezTimer -= delta;
+			
+			if (this.rezTimer <= 0)
+			{
+				this.rezTimer = 120;
+				this.justRezzed = false;
+			}
+		}
 			
 		if (this.damageTimer <= 0)
 		{

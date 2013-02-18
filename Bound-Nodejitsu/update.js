@@ -96,9 +96,12 @@ function UpdatePlayers() {
 
 function HandleInput()
 {
-	players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((joystick.deltaX()/500)*dT), 0, players[apIndex].loc.z + ((joystick.deltaY()/500)*dT));
-	camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
-	players[apIndex].rot.y = joystick.rotation();
+	if (players[apIndex].health > 0)
+	{
+		players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((joystick.deltaX()/500)*dT), 0, players[apIndex].loc.z + ((joystick.deltaY()/500)*dT));
+		camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
+		players[apIndex].rot.y = joystick.rotation();
+	}
 }
 
 function HandleCollisions()

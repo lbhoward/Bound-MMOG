@@ -52,6 +52,8 @@ function init() {
 	loadModel("Models/Arena/Arena.dae", 40);
 	loadModel("Models/Skydome/Skydome.dae", 1000);
 	
+	camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
+	
 	SetupTouch();
 	
 	PhysicsLoop();

@@ -182,6 +182,16 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 	app.get('/Models/HazardZone//hazard_tex.png', function(req, res) {
 		res.end(fs.readFileSync('./Models/HazardZone/hazard_tex.png'));
 	});
+	//Icons
+	app.get('/Icons/Heal.png', function(req, res) {
+		res.end(fs.readFileSync('./Icons/Heal.png'));
+	});
+	app.get('/Icons/Attack.png', function(req, res) {
+		res.end(fs.readFileSync('./Icons/Attack.png'));
+	});
+	app.get('/Icons/Rez.png', function(req, res) {
+		res.end(fs.readFileSync('./Icons/Rez.png'));
+	});
 }
 
 module.exports.app_gets = app_gets;
