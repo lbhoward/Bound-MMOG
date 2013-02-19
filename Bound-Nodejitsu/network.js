@@ -47,7 +47,6 @@ socket.on('UPDATE', function(getPlayers, bossHP) {
 			players[i].rot.y = getPlayers[i].R;
 			players[i].justAttacked = getPlayers[i].justAttacked;
 			players[i].justHealed = getPlayers[i].justHealed;
-			console.log(i+": " + players[i].justHealed);
 			players[i].justRezzed = getPlayers[i].justRezzed;
 		}
 		players[i].health = getPlayers[i].HP;

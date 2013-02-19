@@ -21,34 +21,39 @@ var HandleMouseDown = function(event) {
 	var x	= event.clientX;
 	var y	= event.clientY;
 	
-	if (players[apIndex].justHealed == false)
+	if (players[apIndex].health > 0)
 	{
-		for (var i = 0; i < players.length; i++)
+		if (players[apIndex].justHealed == false)
 		{
-			if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-				if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
-				{
-					if (players[i].health > 0 && players[i].health < 100)
-					{	
-						socket.emit('HEAL_PLAYER', players[i].name);
-						players[apIndex].justHealed = true;
-					}
-					else if (players[apIndex].justRezzed == false && players[i].health == 0)
-					{
-						socket.emit ('REZ_PLAYER', players[i].name);
-						players[apIndex].justRezzed = true;
-					}
-				}
-		}
-	}
-	
-	if (players[apIndex].justAttacked == false)
-		if (x > iconX && x < SCREEN_WIDTH)
-			if (y > iconSize && y < iconSize*2)
+			for (var i = 0; i < players.length; i++)
 			{
-				socket.emit('HIT_BOSS');
-				players[apIndex].justAttacked = true;
+				if (x > 5 && x < (SCREEN_WIDTH/8)+5)
+					if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
+					{
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							socket.emit('HEAL_PLAYER', players[i].name);
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							socket.emit ('REZ_PLAYER', players[i].name);
+							players[apIndex].justRezzed = true;
+						}
+					}
 			}
+		}
+		
+		if (players[apIndex].justAttacked == false)
+			if (x > iconX && x < SCREEN_WIDTH)
+				if (y > iconSize && y < iconSize*2)
+					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
+					{
+						socket.emit('HIT_BOSS');
+						players[apIndex].justAttacked = true;
+					}
+	}
 };
 
 var HandleTouchDown = function(event) {

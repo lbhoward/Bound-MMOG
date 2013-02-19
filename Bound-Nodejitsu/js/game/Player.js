@@ -34,56 +34,56 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 		currentPlayer.readyState = true;
 	});
 		
-	this.update = function(animation, delta, clientPlayer) {
+	this.update = function(animation, delta) {
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
 		
-		if (clientPlayer == true)
+
+		this.damageTimer -= delta;
+		
+		if (this.justHealed)
 		{
-			console.log(this.name);
-			this.damageTimer -= delta;
+			this.healTimer -= delta;
 			
-			if (this.justHealed)
+			if (this.healTimer <= 0)
 			{
-				this.healTimer -= delta;
-				
-				if (this.healTimer <= 0)
-				{
-					this.healTimer = 1.5;
-					this.justHealed = false;
-				}
+				this.healTimer = 1.5;
+				this.justHealed = false;
+				socket.emit('END_ANIM', this.name, 1);
 			}
-			if (this.justAttacked)
+		}
+		if (this.justAttacked)
+		{
+			this.attackTimer -= delta;
+			
+			if (this.attackTimer <= 0)
 			{
-				this.attackTimer -= delta;
-				
-				if (this.attackTimer <= 0)
-				{
-					this.attackTimer = 1.0;
-					this.justAttacked = false;
-				}
+				this.attackTimer = 1.0;
+				this.justAttacked = false;
+				socket.emit('END_ANIM', this.name, 2);
 			}
-			if (this.justRezzed)
+		}
+		if (this.justRezzed)
+		{
+			this.rezTimer -= delta;
+			
+			if (this.rezTimer <= 0)
 			{
-				this.rezTimer -= delta;
-				
-				if (this.rezTimer <= 0)
-				{
-					this.rezTimer = 120;
-					this.justRezzed = false;
-				}
+				this.rezTimer = 120;
+				this.justRezzed = false;
+				socket.emit('END_ANIM', this.name, 3);
 			}
-				
-			if (this.damageTimer <= 0)
+		}
+			
+		if (this.damageTimer <= 0)
+		{
+			if (this.inAOE == true)
 			{
-				if (this.inAOE == true)
-				{
-					socket.emit('TAKE_DAMAGE', this.name);
-					this.damageTimer = 1.25;
-				}
-				else
-					this.damageTimer = 0;
+				socket.emit('TAKE_DAMAGE', this.name);
+				this.damageTimer = 1.25;
 			}
+			else
+				this.damageTimer = 0;
 		}
 		
 		if (animation.animType != this.previousAnim)

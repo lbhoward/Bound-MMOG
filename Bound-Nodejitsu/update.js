@@ -2,9 +2,11 @@ var lT = new Date().getTime();
 var dT;
 
 //Player Animations
+var deadAnim = new Animation("deadAnim", 1, 2);
 var walkAnim = new Animation("walkAnim", 1, 20);
 var idleAnim = new Animation("idleAnim", 38, 58);
 var healAnim = new Animation("healAnim", 59, 70);
+var attackAnim = new Animation("attackAnim", 100, 120);
 
 
 //Boss Animations
@@ -30,7 +32,7 @@ function PhysicsLoop() {
 	HandleCollisions();
 	
 	//Update Server
-	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get(), players[apIndex].justHealed, players[apIndex].justAttacked, players[apIndex].justRezzed);
+	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get());
 	
 	//Update Other Players
 	UpdatePlayers();
@@ -56,24 +58,17 @@ function UpdatePlayers() {
 		}
 		else if (players[i].onScreen)
 		{
-			if (i == apIndex)
-			{
-				if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
-					players[i].update(walkAnim, delta, true);
-				else if (players[i].justHealed)
-					players[i].update(healAnim, delta, true);
-				else
-					players[i].update(idleAnim, delta, true);
-			}
+			if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
+				players[i].update(walkAnim, delta);
+			else if (players[i].justHealed)
+				players[i].update(healAnim, delta);
+			else if (players[i].justAttacked)
+				players[i].update(attackAnim, delta);
 			else
-			{
-				if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
-					players[i].update(walkAnim, delta, false);
-				else if (players[i].justHealed)
-					players[i].update(healAnim, delta, false);
-				else
-					players[i].update(idleAnim, delta, false);
-			}
+				players[i].update(idleAnim, delta);
+				
+			if (players[i].health == 0)
+				players[i].update(deadAnim, delta);
 		}
 	}
 	

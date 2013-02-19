@@ -52,18 +52,22 @@ io.sockets.on('connection', function (socket) {
 		console.log(getPlayers);
   });
 
-  socket.on('RESPOND', function(loc, rot, heal, attack, rez) {
+  socket.on('RESPOND', function(loc, rot) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		getPlayers[indexP].X = loc.x;
 		getPlayers[indexP].Z = loc.z;
 		getPlayers[indexP].R = rot.y;
-		getPlayers[indexP].justHealed = heal;
-		getPlayers[indexP].justAttacked = attack;
-		getPlayers[indexP].justHealed = rez;
   });
   
   socket.on('HEAL_PLAYER', function(name) {
+		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
+		var indexPP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
+		
+		getPlayers[indexPP].justHealed = true;
+		getPlayers[indexPP].justAttacked = false;
+		getPlayers[indexPP].justRezzed = false;
+  
 		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
 		getPlayers[indexP].HP += 10;
 		
@@ -89,11 +93,30 @@ io.sockets.on('connection', function (socket) {
 			getPlayers[indexP].HP = 0;
   });
   
-  socket.on('HIT_BOSS', function(name) {  
-		bossCurHP -= 5;
+  socket.on('HIT_BOSS', function(name) {
+		var damageToBoss = 5*(getPlayers.length/100);
+  
+		bossCurHP -= damageToBoss;
 		
 		if (bossCurHP < 0)
 			bossCurHP = 0;
+  });
+  
+  socket.on('END_ANIM', function(name, animType) {
+		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
+		
+		switch (animType)
+		{
+			case 1:
+				getPlayers[indexP].justHealed = false;
+				break;
+			case 2:
+				getPlayers[indexP].justAttacked = false;
+				break;
+			case 3:
+				getPlayers[indexP].justRezzed = false;
+				break;
+		}
   });
   
   socket.on('disconnect', function() {
