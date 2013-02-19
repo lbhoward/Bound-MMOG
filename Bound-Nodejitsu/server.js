@@ -41,10 +41,6 @@ var bossCurHP = bossBaseHP;
 //App Get Initialisation (Request/Response Handling)
 require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
 
-//Boss Variables
-//var boss = require('./server_boss').Boss();
-//var CurrentBoss = boss();
-
 // Define a message handler
 io.sockets.on('connection', function (socket) {
   socket.emit('CON_ACCEPT', getPlayers, bossCurHP); //Emit the list of players to the client that just connected
@@ -56,12 +52,15 @@ io.sockets.on('connection', function (socket) {
 		console.log(getPlayers);
   });
 
-  socket.on('RESPOND', function(loc, rot) {
+  socket.on('RESPOND', function(loc, rot, heal, attack, rez) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		getPlayers[indexP].X = loc.x;
 		getPlayers[indexP].Z = loc.z;
 		getPlayers[indexP].R = rot.y;
+		getPlayers[indexP].justHealed = heal;
+		getPlayers[indexP].justAttacked = attack;
+		getPlayers[indexP].justHealed = rez;
   });
   
   socket.on('HEAL_PLAYER', function(name) {
@@ -80,7 +79,7 @@ io.sockets.on('connection', function (socket) {
 			getPlayers[indexP].HP = 50;
   });
   
-  socket.on('TAKE_DAMAGE', function() {
+  socket.on('TAKE_DAMAGE', function(name) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
@@ -90,7 +89,7 @@ io.sockets.on('connection', function (socket) {
 			getPlayers[indexP].HP = 0;
   });
   
-  socket.on('HIT_BOSS', function() {
+  socket.on('HIT_BOSS', function(name) {  
 		bossCurHP -= 5;
 		
 		if (bossCurHP < 0)

@@ -4,6 +4,7 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 	this.rot = new Vector3(setRot.x, setRot.y, setRot.z) || new Vector3();
 	//3D graphical model
 	this.model = 0;	//Initialise variable to 0 due to callback nature
+	this.pistol = 0;
 	this.readyState = false; this.onScreen = false;
 	//Identifier
 	this.name = setName;
@@ -33,52 +34,56 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 		currentPlayer.readyState = true;
 	});
 		
-	this.update = function(animation, delta) {
+	this.update = function(animation, delta, clientPlayer) {
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
 		
-		this.damageTimer -= delta;
-		
-		if (this.justHealed)
+		if (clientPlayer == true)
 		{
-			this.healTimer -= delta;
+			console.log(this.name);
+			this.damageTimer -= delta;
 			
-			if (this.healTimer <= 0)
+			if (this.justHealed)
 			{
-				this.healTimer = 1.5;
-				this.justHealed = false;
+				this.healTimer -= delta;
+				
+				if (this.healTimer <= 0)
+				{
+					this.healTimer = 1.5;
+					this.justHealed = false;
+				}
 			}
-		}
-		if (this.justAttacked)
-		{
-			this.attackTimer -= delta;
-			
-			if (this.attackTimer <= 0)
+			if (this.justAttacked)
 			{
-				this.attackTimer = 1.0;
-				this.justAttacked = false;
+				this.attackTimer -= delta;
+				
+				if (this.attackTimer <= 0)
+				{
+					this.attackTimer = 1.0;
+					this.justAttacked = false;
+				}
 			}
-		}
-		if (this.justRezzed)
-		{
-			this.rezTimer -= delta;
-			
-			if (this.rezTimer <= 0)
+			if (this.justRezzed)
 			{
-				this.rezTimer = 120;
-				this.justRezzed = false;
+				this.rezTimer -= delta;
+				
+				if (this.rezTimer <= 0)
+				{
+					this.rezTimer = 120;
+					this.justRezzed = false;
+				}
 			}
-		}
-			
-		if (this.damageTimer <= 0)
-		{
-			if (this.inAOE == true)
+				
+			if (this.damageTimer <= 0)
 			{
-				socket.emit('TAKE_DAMAGE');
-				this.damageTimer = 1.25;
+				if (this.inAOE == true)
+				{
+					socket.emit('TAKE_DAMAGE', this.name);
+					this.damageTimer = 1.25;
+				}
+				else
+					this.damageTimer = 0;
 			}
-			else
-				this.damageTimer = 0;
 		}
 		
 		if (animation.animType != this.previousAnim)

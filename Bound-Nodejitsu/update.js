@@ -4,6 +4,8 @@ var dT;
 //Player Animations
 var walkAnim = new Animation("walkAnim", 1, 20);
 var idleAnim = new Animation("idleAnim", 38, 58);
+var healAnim = new Animation("healAnim", 59, 70);
+
 
 //Boss Animations
 var bossIdleAnim = new Animation("bossIdleAnim", 0, 57);
@@ -28,7 +30,7 @@ function PhysicsLoop() {
 	HandleCollisions();
 	
 	//Update Server
-	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get());
+	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get(), players[apIndex].justHealed, players[apIndex].justAttacked, players[apIndex].justRezzed);
 	
 	//Update Other Players
 	UpdatePlayers();
@@ -54,10 +56,24 @@ function UpdatePlayers() {
 		}
 		else if (players[i].onScreen)
 		{
-			if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
-				players[i].update(walkAnim, delta);
+			if (i == apIndex)
+			{
+				if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
+					players[i].update(walkAnim, delta, true);
+				else if (players[i].justHealed)
+					players[i].update(healAnim, delta, true);
+				else
+					players[i].update(idleAnim, delta, true);
+			}
 			else
-				players[i].update(idleAnim, delta);
+			{
+				if ((players[i].model.position.x != players[i].loc.x) || (players[i].model.position.y != players[i].loc.y) || (players[i].model.position.z != players[i].loc.z))
+					players[i].update(walkAnim, delta, false);
+				else if (players[i].justHealed)
+					players[i].update(healAnim, delta, false);
+				else
+					players[i].update(idleAnim, delta, false);
+			}
 		}
 	}
 	
