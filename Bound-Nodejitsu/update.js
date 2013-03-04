@@ -21,17 +21,16 @@ var bossDead = new Animation("bossDead", 360, 361);
 var clock = new THREE.Clock();
 var delta;
 
-var HazardMeshes = new Array();
+var hazardGeo, hazardMat;
 
 function StoreHazardMeshes() {
 	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
 	
 		var material = materials[0];
 		
-		var faceMaterial = new THREE.MeshFaceMaterial( materials );
+		hazardMat = new THREE.MeshFaceMaterial( materials );
 		
-		for (var i = 0; i < 12; i++)
-			HazardMeshes.push(new THREE.Mesh( geometry, faceMaterial ));
+		hazardGeo = geometry;
 	});
 };
 
