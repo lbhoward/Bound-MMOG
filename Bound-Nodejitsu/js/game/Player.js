@@ -1,9 +1,9 @@
-function Player(modelPath, setLoc, setRot, setName, setHP){
+function Player(setGeo, setMat, setLoc, setRot, setName, setHP){
 	//Location and rotation vectors
 	this.loc = new Vector3(setLoc.x, setLoc.y, setLoc.z) || new Vector3();
 	this.rot = new Vector3(setRot.x, setRot.y, setRot.z) || new Vector3();
 	//3D graphical model
-	this.model = 0;	//Initialise variable to 0 due to callback nature
+	this.model = new THREE.SkinnedMesh( setGeo, setMat );
 	this.pistol = 0;
 	this.readyState = false; this.onScreen = false;
 	//Identifier
@@ -19,25 +19,11 @@ function Player(modelPath, setLoc, setRot, setName, setHP){
 	this.t = 0;
 	this.currentFrame = 0; this.lastFrame = 0; this.previousAnim = 0;
 	
-	var currentPlayer = this; //this. accessor for callback
-		
-	new THREE.JSONLoader().load( modelPath, function( geometry, materials ) {
-	
-		var material = materials[0];
-		material.morphTargets = true;
-		
-		var faceMaterial = new THREE.MeshFaceMaterial( materials );
-		
-		currentPlayer.model = new THREE.SkinnedMesh( geometry, faceMaterial );
-		currentPlayer.model.position.set(currentPlayer.loc.x, currentPlayer.loc.y, currentPlayer.loc.z);
-		currentPlayer.model.scale.set(10,10,10);
-		currentPlayer.readyState = true;
-	});
+	this.readyState = true;
 		
 	this.update = function(animation, delta) {
 		this.model.position.set(this.loc.x, this.loc.y, this.loc.z);
 		this.model.rotation.y = this.rot.y;
-		
 
 		this.damageTimer -= delta;
 		

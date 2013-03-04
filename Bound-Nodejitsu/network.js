@@ -11,7 +11,7 @@ socket.on('connect', function () {
 		
 		for (var i = 0; i < getPlayers.length; i++)
 		{
-			players.push(new Player("Models/PCs/male/male.js", new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
+			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
 			if (getPlayers[i].USERNAME == playerName)
 			{
 				apIndex = i;
@@ -38,7 +38,7 @@ socket.on('UPDATE', function(getPlayers, bossHP) {
 	{	
 		if (players[i] == undefined)
 		{
-			players.push(new Player("Models/PCs/male/male.js", new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
+			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
 		}
 			
 		if (i != apIndex)

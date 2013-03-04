@@ -22,6 +22,7 @@ var clock = new THREE.Clock();
 var delta;
 
 var hazardGeo, hazardMat;
+var playerGeo, playerMat;
 
 function StoreHazardMeshes() {
 	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
@@ -31,6 +32,17 @@ function StoreHazardMeshes() {
 		hazardMat = new THREE.MeshFaceMaterial( materials );
 		
 		hazardGeo = geometry;
+	});
+};
+function StorePlayerMeshes() {
+	new THREE.JSONLoader().load( "Models/PCs/male/male.js", function( geometry, materials ) {
+	
+		var material = materials[0];
+		material.morphTargets = true;
+		
+		playerMat = new THREE.MeshFaceMaterial( materials );
+		
+		playerGeo = geometry;
 	});
 };
 

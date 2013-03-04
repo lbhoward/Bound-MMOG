@@ -2,7 +2,7 @@ function HazardZone (setLoc, setRad, setGeo, setMat) {
 	this.loc = new Vector3(setLoc.x, setLoc.y, setLoc.z);
 	this.rad = setRad;
 	
-	this.model = new THREE.Mesh( setGeo, setMat );;
+	this.model = new THREE.Mesh( setGeo, setMat );
 	
 	this.readyState = false;
 	
