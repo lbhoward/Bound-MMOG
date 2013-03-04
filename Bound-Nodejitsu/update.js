@@ -21,6 +21,20 @@ var bossDead = new Animation("bossDead", 360, 361);
 var clock = new THREE.Clock();
 var delta;
 
+var HazardMeshes = new Array();
+
+function StoreHazardMeshes() {
+	new THREE.JSONLoader().load( "Models/HazardZone/hazardzone.js", function( geometry, materials ) {
+	
+		var material = materials[0];
+		
+		var faceMaterial = new THREE.MeshFaceMaterial( materials );
+		
+		for (var i = 0; i < 12; i++)
+			HazardMeshes.push(new THREE.Mesh( geometry, faceMaterial ));
+	});
+};
+
 function PhysicsLoop() {
 	var cT = new Date().getTime();
 	dT = cT - lT;
@@ -32,7 +46,7 @@ function PhysicsLoop() {
 	HandleCollisions();
 	
 	//Update Server
-	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get());
+	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get() );
 	
 	//Update Other Players
 	UpdatePlayers();

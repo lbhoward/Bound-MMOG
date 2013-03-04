@@ -65,7 +65,7 @@ socket.on('BOSS_CAST', function(castAbility, targetData) {
 			boss.castLocations = targetData;
 			for (var i = 0; i < targetData.length; i++)
 			{
-				hazards.push(new HazardZone(targetData[i], 25));
+				hazards.push(new HazardZone(targetData[i], 25, HazardMeshes[i]));
 			}
 		break;
 		

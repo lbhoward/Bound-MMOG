@@ -7,7 +7,7 @@ var webglRenderer;
 var GUI = document.createElement('canvas');
 var ctx = GUI.getContext('2d');
 
-var arenaModel, maleModel, bossModel, hazardModel;
+var arenaModel, maleModel, bossModel;
 
 function init() {
 	console.log("Initiliasing Bound... Please Wait...");
@@ -29,6 +29,9 @@ function init() {
 	webglRenderer.domElement.style.position = "static";
 	webglRenderer.domElement.id = "webGL";
 	container.appendChild( webglRenderer.domElement );
+	
+	//Pre-load models
+	StoreHazardMeshes();
 	
 	//GUI
 	container.appendChild(GUI);
