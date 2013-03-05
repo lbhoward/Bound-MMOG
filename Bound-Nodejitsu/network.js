@@ -2,9 +2,11 @@ var players = new Array();
 var boss;
 var hazards = new Array();
 var apIndex;
+var socket;
 
 //Socket.IO
-var socket = io.connect();
+function ReadyToConnect() {
+socket = io.connect();
 
 socket.on('connect', function () {
 	socket.on('CON_ACCEPT', function(getPlayers, bossHP) {
@@ -81,6 +83,7 @@ socket.on('disconnect', function() {
 	console.log("Lost connection to server: You may have logged in from another location, or the server has terminated.");
 	window.history.back(-1);
 });
+}
 
 //Search JSON Array for Matching Attribute, return index
 function findWithAttr(array, attr, value) {

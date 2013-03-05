@@ -4,6 +4,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP){
 	this.rot = new Vector3(setRot.x, setRot.y, setRot.z) || new Vector3();
 	//3D graphical model
 	this.model = new THREE.SkinnedMesh( setGeo, setMat );
+	this.model.scale.set(10,10,10);
 	this.pistol = 0;
 	this.readyState = false; this.onScreen = false;
 	//Identifier

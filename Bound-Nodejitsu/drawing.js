@@ -9,6 +9,12 @@ var ctx = GUI.getContext('2d');
 
 var arenaModel, maleModel, bossModel;
 
+window.onload = function PreLoadAssets() {
+	//Pre-load models
+	StoreHazardMeshes();
+	StorePlayerMeshes();
+}
+
 function init() {
 	console.log("Initiliasing Bound... Please Wait...");
 	
@@ -29,9 +35,6 @@ function init() {
 	webglRenderer.domElement.style.position = "static";
 	webglRenderer.domElement.id = "webGL";
 	container.appendChild( webglRenderer.domElement );
-	
-	//Pre-load models
-	StoreHazardMeshes();
 	
 	//GUI
 	container.appendChild(GUI);
@@ -54,7 +57,6 @@ function init() {
 	joystick._lastRotation = players[apIndex].rot.y;
 	
 	loadDAEModel("Models/Arena/Arena.dae", 40);
-	//loadJSONModel("Models/HazardZone/hazardzone.js", hazardModel, 10);
 	
 	camera.position = new Vector3(players[apIndex].loc.x, players[apIndex].loc.y + 90, players[apIndex].loc.z + 90);
 	

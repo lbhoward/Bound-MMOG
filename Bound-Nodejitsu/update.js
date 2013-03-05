@@ -43,6 +43,9 @@ function StorePlayerMeshes() {
 		playerMat = new THREE.MeshFaceMaterial( materials );
 		
 		playerGeo = geometry;
+		
+		console.log("Loaded Player Model, ready to connect...");
+		ReadyToConnect();
 	});
 };
 
