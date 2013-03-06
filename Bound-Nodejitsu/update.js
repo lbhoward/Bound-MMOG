@@ -60,7 +60,10 @@ function PhysicsLoop() {
 	HandleCollisions();
 	
 	//Update Server
-	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get() );
+	socket.emit('RESPOND', players[apIndex].loc.get(), players[apIndex].rot.get(), players[apIndex].target, players[apIndex].actionState, players[apIndex].damaged );
+	players[apIndex].healTarget = "";
+	players[apIndex].actionState = 0;
+	players[apIndex].damaged = false;
 	
 	//Update Other Players
 	UpdatePlayers();

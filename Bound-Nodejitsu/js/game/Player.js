@@ -14,6 +14,9 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP){
 	this.attackTimer = 1.0; this.justAttacked = false;
 	this.rezTimer = 120; this.justRezzed = false;
 	this.rad = 15;
+	this.target = "";
+	this.actionState = 0;
+	this.damaged = false;
 	
 	//Animation Stuff
 	this.clock = new THREE.Clock();
@@ -66,7 +69,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP){
 		{
 			if (this.inAOE == true)
 			{
-				socket.emit('TAKE_DAMAGE', this.name);
+				this.damaged = true;
 				this.damageTimer = 1.25;
 			}
 			else

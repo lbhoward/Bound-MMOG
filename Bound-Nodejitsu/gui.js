@@ -32,13 +32,16 @@ var HandleMouseDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							socket.emit('HEAL_PLAYER', players[i].name);
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 1;
 							
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
-							socket.emit ('REZ_PLAYER', players[i].name);
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 2;
+							
 							players[apIndex].justRezzed = true;
 						}
 					}
@@ -50,7 +53,8 @@ var HandleMouseDown = function(event) {
 				if (y > iconSize && y < iconSize*2)
 					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
 					{
-						socket.emit('HIT_BOSS');
+						players[apIndex].actionState = 3;
+							
 						players[apIndex].justAttacked = true;
 					}
 	}

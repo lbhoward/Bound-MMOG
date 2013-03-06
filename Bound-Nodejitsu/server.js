@@ -52,16 +52,34 @@ io.sockets.on('connection', function (socket) {
 		console.log(getPlayers);
   });
 
-  socket.on('RESPOND', function(loc, rot) {
+  socket.on('RESPOND', function(loc, rot, hT, aS, d) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		getPlayers[indexP].X = loc.x;
 		getPlayers[indexP].Z = loc.z;
 		getPlayers[indexP].R = rot.y;
+		
+		switch (aS)
+		{
+			case 0:
+				break;
+			case 1:
+				healPlayer(socket.id, hT);
+				break;
+			case 2:
+				rezPlayer(hT);
+				break;
+			case 3:
+				hitBoss(hT);
+				break;
+		}
+		
+		if (d)
+			takeDamage(socket.id);
   });
   
-  socket.on('HEAL_PLAYER', function(name) {
-		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
+  function healPlayer(socketid, name) {
+		var indexC = findWithAttr(getCouplings, 'SID', socketid);
 		var indexPP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
 		getPlayers[indexPP].justHealed = true;
@@ -73,34 +91,35 @@ io.sockets.on('connection', function (socket) {
 		
 		if (getPlayers[indexP].HP > 100)
 			getPlayers[indexP].HP = 100;
-  });
+  }
   
-  socket.on('REZ_PLAYER', function(name) {
+  function rezPlayer(name) {
 		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
 		getPlayers[indexP].HP += 50;
 		
 		if (getPlayers[indexP].HP > 50)
 			getPlayers[indexP].HP = 50;
-  });
+  }
   
-  socket.on('TAKE_DAMAGE', function(name) {
-		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
+  function takeDamage(socketid) {
+		console.log("Taking Damage");
+		var indexC = findWithAttr(getCouplings, 'SID', socketid);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
 		getPlayers[indexP].HP -= 15;
 		
 		if (getPlayers[indexP].HP < 0)
 			getPlayers[indexP].HP = 0;
-  });
+  }
   
-  socket.on('HIT_BOSS', function(name) {
+  function hitBoss() {
 		var damageToBoss = 5*(getPlayers.length/100);
   
 		bossCurHP -= damageToBoss;
 		
 		if (bossCurHP < 0)
 			bossCurHP = 0;
-  });
+  }
   
   socket.on('END_ANIM', function(name, animType) {
 		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
