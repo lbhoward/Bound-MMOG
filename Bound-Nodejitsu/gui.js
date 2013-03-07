@@ -9,12 +9,30 @@ var healTimeFill = iconSize;
 var attackTimeFill = iconSize;
 var rezTimeFull = iconSize;
 
+var lineWidth = 10;
+var radius = 10;
+
 function SetupTouch() {
 	var el = document.getElementById('container');
 	
 	el.addEventListener("mousedown", HandleMouseDown, false);
 	el.addEventListener("touchstart", HandleTouchDown, false);
 };
+
+document.onkeypress=function(e) {
+	if (e.charCode == 52) //Radius Increase 4 
+		radius += 1;
+	if (e.charCode == 49) //Radius Decrease 1
+		radius -= 1;
+		
+	if (e.charCode == 54) //Width Increase 6
+		lineWidth += 1;
+	if (e.charCode == 51) //Width Decrease 3
+		lineWidth -= 1;
+		
+	if (e.charCode == 53) //Print Values 5
+		console.log("Radius: " + radius + " - Width: " + lineWidth);
+}
 
 var HandleMouseDown = function(event) {
 	event.preventDefault();
@@ -100,6 +118,7 @@ var HandleTouchDown = function(event) {
 function DrawBars() {
 	ctx.clearRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
+	//Player Standard Rectangle
 	for (var i = 0; i < players.length; i++)
 	{
 		//HP Container (Stroke + Empty)
@@ -109,15 +128,31 @@ function DrawBars() {
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
 		ctx.fillStyle = 'rgba(0,255,0,0)';
-		ctx.fill();
-		ctx.stroke();
+		//ctx.fill();
+		//ctx.stroke();
 		
 		//HP Bar (No Stroke + Fill)
 		ctx.beginPath();					
 		ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
 						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
 		ctx.fillStyle = 'rgba(0,255,0,1)';
-		ctx.fill();
+		//ctx.fill();
+	}
+	
+	//Player Circle Arc  **LINEWIDTH MUST BE 2*RADIUS
+	for (var i = 0; i < players.length; i++)
+	{
+		ctx.beginPath();
+		ctx.strokeStyle	= 'rgba(0,255,0,1)'; 
+		ctx.lineWidth	= (SCREEN_HEIGHT/40)*2;
+		
+		//context.arc(x, y, radius, startangle, endangle, anti-clockwise?);
+		
+		var endAngle = 6.28 * (players[i].health / 100);
+		
+		ctx.arc((SCREEN_HEIGHT/20)+(SCREEN_HEIGHT/40), SCREEN_HEIGHT/20+((SCREEN_HEIGHT/40)*i), SCREEN_HEIGHT/40, 0, endAngle, false);
+		//ctx.arc(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, radius, 0, endAngle, false);
+		ctx.stroke();
 	}
 	
 	//Boss Bar (Stroke + Empty)

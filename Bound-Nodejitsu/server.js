@@ -102,7 +102,6 @@ io.sockets.on('connection', function (socket) {
   }
   
   function takeDamage(socketid) {
-		console.log("Taking Damage");
 		var indexC = findWithAttr(getCouplings, 'SID', socketid);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
@@ -156,7 +155,7 @@ io.sockets.on('connection', function (socket) {
 
 //Controller for Boss Abilities
 setInterval(function() {
-		if (bossCurHP > 0)
+		if (bossCurHP > 0 && getPlayers.length > 0)
 		{
 			var castAbility = Math.floor((Math.random()*2)+1);
 			//var castAbility = 2;
@@ -168,6 +167,7 @@ setInterval(function() {
 				case 1:
 					fireBallTarget = Math.floor((Math.random()*getPlayers.length));
 					io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
+					getPlayers[fireBallTarget].HP -= 15;
 				break;
 				
 				case 2:
