@@ -81,6 +81,10 @@ socket.on('BOSS_CAST', function(castAbility, targetData) {
 
 socket.on('disconnect', function() {
 	console.log("Lost connection to server: You may have logged in from another location, or the server has terminated.");
+	
+	for (var i = 0; i < personalLog.length; ++i)
+		console.log(i + ": " + personalLog[i]);
+	
 	window.history.back(-1);
 });
 }

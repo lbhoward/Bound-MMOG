@@ -8,6 +8,8 @@ var idleAnim = new Animation("idleAnim", 38, 58);
 var healAnim = new Animation("healAnim", 59, 70);
 var attackAnim = new Animation("attackAnim", 100, 120);
 
+var personalLog = new Array();
+
 
 //Boss Animations
 var bossIdleAnim = new Animation("bossIdleAnim", 0, 57);

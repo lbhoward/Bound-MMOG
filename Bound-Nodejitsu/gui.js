@@ -83,6 +83,8 @@ var HandleMouseDown = function(event) {
 							players[apIndex].actionState = 1;
 							
 							players[apIndex].justHealed = true;
+							
+							personalLog.push(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -186,8 +188,29 @@ function DrawBars() {
 		//ctx.arc((SCREEN_HEIGHT/20)+(SCREEN_HEIGHT/40), SCREEN_HEIGHT/20+((SCREEN_HEIGHT/40)*i), SCREEN_HEIGHT/40, 0, endAngle, false);
 		//ctx.arc(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, radius, 0, endAngle, false);
 		//ctx.stroke();
-		ctx.fill();
+		//ctx.fill();
 		ctx.closePath();
+	}
+	
+	//Player Square
+	for (var i = 0; i < players.length; i++)
+	{
+		//HP Container (Stroke + Empty)
+		ctx.beginPath();					
+		ctx.rect(5, ((calcRadius*2)*i)+5,
+						calcRadius*2, calcRadius*2);
+		ctx.strokeStyle	= "#000000"; 
+		ctx.lineWidth	= 1;
+		ctx.fillStyle = 'rgba(0,255,0,0)';
+		ctx.fill();
+		ctx.stroke();
+		
+		//HP Bar (No Stroke + Fill)
+		ctx.beginPath();					
+		ctx.rect(5, (calcRadius*2)+((calcRadius*2)*i)+5,
+						calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
+		ctx.fillStyle = 'rgba(0,255,0,1)';
+		ctx.fill();
 	}
 	
 	//Boss Bar (Stroke + Empty)
