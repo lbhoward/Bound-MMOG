@@ -10,7 +10,11 @@ var attackTimeFill = iconSize;
 var rezTimeFull = iconSize;
 
 var lineWidth = 10;
-var radius = 10;
+var radius = SCREEN_HEIGHT / 20;
+var calcRadius = radius+(lineWidth*2);
+
+//0: Bars   1: Circles
+var GUIState = 1;
 
 function SetupTouch() {
 	var el = document.getElementById('container');
@@ -45,6 +49,8 @@ var HandleMouseDown = function(event) {
 		{
 			for (var i = 0; i < players.length; i++)
 			{
+				//Bars
+				if (GUIState == 0)
 				if (x > 5 && x < (SCREEN_WIDTH/8)+5)
 					if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
 					{
@@ -63,6 +69,30 @@ var HandleMouseDown = function(event) {
 							players[apIndex].justRezzed = true;
 						}
 					}
+					
+				//Circles
+				if (GUIState == 1)
+				{
+				var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
+				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
+				if (distance <= calcRadius)
+					{
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 1;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 2;
+							
+							players[apIndex].justRezzed = true;
+						}
+					}
+				}
 			}
 		}
 		
@@ -144,15 +174,20 @@ function DrawBars() {
 	{
 		ctx.beginPath();
 		ctx.strokeStyle	= 'rgba(0,255,0,1)'; 
-		ctx.lineWidth	= (SCREEN_HEIGHT/40)*2;
-		
+		ctx.lineWidth = lineWidth;
 		//context.arc(x, y, radius, startangle, endangle, anti-clockwise?);
 		
 		var endAngle = 6.28 * (players[i].health / 100);
 		
-		ctx.arc((SCREEN_HEIGHT/20)+(SCREEN_HEIGHT/40), SCREEN_HEIGHT/20+((SCREEN_HEIGHT/40)*i), SCREEN_HEIGHT/40, 0, endAngle, false);
+		var centerX = calcRadius; var centerY = calcRadius+((calcRadius*2)*i);
+		ctx.moveTo(centerX, centerY);
+		ctx.arc(calcRadius, calcRadius+((calcRadius*2)*i), calcRadius, 0, endAngle, false );
+		ctx.lineTo(centerX, centerY);
+		//ctx.arc((SCREEN_HEIGHT/20)+(SCREEN_HEIGHT/40), SCREEN_HEIGHT/20+((SCREEN_HEIGHT/40)*i), SCREEN_HEIGHT/40, 0, endAngle, false);
 		//ctx.arc(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, radius, 0, endAngle, false);
-		ctx.stroke();
+		//ctx.stroke();
+		ctx.fill();
+		ctx.closePath();
 	}
 	
 	//Boss Bar (Stroke + Empty)
