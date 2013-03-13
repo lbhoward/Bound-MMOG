@@ -11,7 +11,7 @@ var rezTimeFull = iconSize;
 
 var lineWidth = 10;
 var radius = SCREEN_HEIGHT / 20;
-var calcRadius = radius+(lineWidth*2);
+var calcRadius = radius;
 
 //0: Bars   1: Circles
 var GUIState = 1;
@@ -73,7 +73,15 @@ var HandleMouseDown = function(event) {
 				//Circles
 				if (GUIState == 1)
 				{
-				var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
+				if (i < 10)
+				{
+					var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
+				}
+				else
+				{
+					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-9)));
+				}
+
 				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
 				if (distance <= calcRadius)
 					{
@@ -151,6 +159,7 @@ function DrawBars() {
 	ctx.clearRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//Player Standard Rectangle
+	if (GUIState == 0)
 	for (var i = 0; i < players.length; i++)
 	{
 		//HP Container (Stroke + Empty)
@@ -160,39 +169,52 @@ function DrawBars() {
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
 		ctx.fillStyle = 'rgba(0,255,0,0)';
-		//ctx.fill();
-		//ctx.stroke();
+		ctx.fill();
+		ctx.stroke();
 		
 		//HP Bar (No Stroke + Fill)
 		ctx.beginPath();					
 		ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
 						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
 		ctx.fillStyle = 'rgba(0,255,0,1)';
-		//ctx.fill();
+		ctx.fill();
 	}
 	
 	//Player Circle Arc  **LINEWIDTH MUST BE 2*RADIUS
+	if (GUIState == 1)
 	for (var i = 0; i < players.length; i++)
 	{
 		ctx.beginPath();
 		ctx.strokeStyle	= 'rgba(0,255,0,1)'; 
-		ctx.lineWidth = lineWidth;
+		ctx.fillStyle = 'rgba(0,255,0,1)';
+		ctx.lineWidth = 1;
+		
 		//context.arc(x, y, radius, startangle, endangle, anti-clockwise?);
 		
+		if (players[i].health > 0)
+		{
 		var endAngle = 6.28 * (players[i].health / 100);
 		
-		var centerX = calcRadius; var centerY = calcRadius+((calcRadius*2)*i);
+		if (i < 10)
+		{
+			var centerX = calcRadius; var centerY = calcRadius+((calcRadius*2)*i));
+		}
+		else
+		{
+			var centerX = calcRadius*3; var centerY = (calcRadius+((calcRadius*2)*(i-9)));
+		}
+
 		ctx.moveTo(centerX, centerY);
 		ctx.arc(calcRadius, calcRadius+((calcRadius*2)*i), calcRadius, 0, endAngle, false );
 		ctx.lineTo(centerX, centerY);
-		//ctx.arc((SCREEN_HEIGHT/20)+(SCREEN_HEIGHT/40), SCREEN_HEIGHT/20+((SCREEN_HEIGHT/40)*i), SCREEN_HEIGHT/40, 0, endAngle, false);
-		//ctx.arc(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, radius, 0, endAngle, false);
-		//ctx.stroke();
-		//ctx.fill();
+		ctx.stroke();
+		ctx.fill();
 		ctx.closePath();
+		}
 	}
 	
 	//Player Square
+	if (GUIState == 2)
 	for (var i = 0; i < players.length; i++)
 	{
 		//HP Container (Stroke + Empty)
