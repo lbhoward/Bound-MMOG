@@ -79,7 +79,7 @@ var HandleMouseDown = function(event) {
 				}
 				else
 				{
-					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-9)));
+					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-10)));
 				}
 
 				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
@@ -197,15 +197,15 @@ function DrawBars() {
 		
 		if (i < 10)
 		{
-			var centerX = calcRadius; var centerY = calcRadius+((calcRadius*2)*i));
+			var centerX = calcRadius; var centerY = calcRadius+((calcRadius*2)*i);
 		}
 		else
 		{
-			var centerX = calcRadius*3; var centerY = (calcRadius+((calcRadius*2)*(i-9)));
+			var centerX = calcRadius*3; var centerY = calcRadius+((calcRadius*2)*(i-10));
 		}
 
 		ctx.moveTo(centerX, centerY);
-		ctx.arc(calcRadius, calcRadius+((calcRadius*2)*i), calcRadius, 0, endAngle, false );
+		ctx.arc(centerX, centerY, calcRadius, 0, endAngle, false );
 		ctx.lineTo(centerX, centerY);
 		ctx.stroke();
 		ctx.fill();
@@ -218,7 +218,8 @@ function DrawBars() {
 	for (var i = 0; i < players.length; i++)
 	{
 		//HP Container (Stroke + Empty)
-		ctx.beginPath();					
+		ctx.beginPath();
+		if (i
 		ctx.rect(5, ((calcRadius*2)*i)+5,
 						calcRadius*2, calcRadius*2);
 		ctx.strokeStyle	= "#000000"; 
