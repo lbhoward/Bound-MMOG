@@ -123,36 +123,79 @@ var HandleTouchDown = function(event) {
 	var x	= event.touches[0].pageX;
 	var y	= event.touches[0].pageY;
 	
-	if (players[apIndex].justHealed == false)
+	if (players[apIndex].health > 0)
 	{
-		for (var i = 0; i < players.length; i++)
+		if (players[apIndex].justHealed == false)
 		{
-			if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-				if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
-				{
-					if (players[i].health > 1)
+			for (var i = 0; i < players.length; i++)
+			{
+				//Bars
+				if (GUIState == 0)
+				if (x > 5 && x < (SCREEN_WIDTH/8)+5)
+					if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
 					{
-						console.log("Players Health was: " + players[i].health);	
-						socket.emit('HEAL_PLAYER', players[i].name);
-						players[apIndex].justHealed = true;
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 1;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 2;
+							
+							players[apIndex].justRezzed = true;
+						}
 					}
-					else if (players[apIndex].justRezzed == false)
+					
+				//Circles
+				if (GUIState == 1)
+				{
+				if (i < 10)
+				{
+					var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
+				}
+				else
+				{
+					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-10)));
+				}
+
+				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
+				if (distance <= calcRadius)
 					{
-						console.log("REZZING!");
-						socket.emit ('REZ_PLAYER', players[i].name);
-						players[apIndex].justRezzed = true;
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 1;
+							
+							players[apIndex].justHealed = true;
+							
+							personalLog.push(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 2;
+							
+							players[apIndex].justRezzed = true;
+						}
 					}
 				}
-		}
-	}
-	
-		if (players[apIndex].justAttacked == false)
-		if (x > iconX && x < SCREEN_WIDTH)
-			if (y > iconSize && y < iconSize*2)
-			{
-				socket.emit('HIT_BOSS');
-				players[apIndex].justAttacked = true;
 			}
+		}
+		
+		if (players[apIndex].justAttacked == false)
+			if (x > iconX && x < SCREEN_WIDTH)
+				if (y > iconSize && y < iconSize*2)
+					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
+					{
+						players[apIndex].actionState = 3;
+							
+						players[apIndex].justAttacked = true;
+					}
+	}
 };
 
 function DrawBars() {
@@ -219,9 +262,16 @@ function DrawBars() {
 	{
 		//HP Container (Stroke + Empty)
 		ctx.beginPath();
-		if (i
-		ctx.rect(5, ((calcRadius*2)*i)+5,
+		if (i < 10)
+		{
+			ctx.rect(5, ((calcRadius*2)*i)+5,
 						calcRadius*2, calcRadius*2);
+		}
+		else
+		{
+			ctx.rect(5+(calcRadius*2), ((calcRadius*2)*(i-10))+5,
+						calcRadius*2, calcRadius*2);
+		}
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
 		ctx.fillStyle = 'rgba(0,255,0,0)';

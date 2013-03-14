@@ -188,7 +188,7 @@ setInterval(function() {
 				break;
 			}
 		}
-}, 8000);
+}, 4000);
   
   setInterval(function() {
 		io.sockets.emit('UPDATE', getPlayers, bossCurHP); 
