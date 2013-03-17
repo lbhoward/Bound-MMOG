@@ -92,7 +92,8 @@ var HandleMouseDown = function(event) {
 							
 							players[apIndex].justHealed = true;
 							
-							personalLog.push(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
+							//[EVENT_TYPE:HOURS:MINS:SECS:RECIEVER:NEW_VALUE]
+							personalLog.push("HEAL" + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + players[i].name + ":" + players[i].health);
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -100,6 +101,9 @@ var HandleMouseDown = function(event) {
 							players[apIndex].actionState = 2;
 							
 							players[apIndex].justRezzed = true;
+							
+							//[EVENT_TYPE:HOURS:MINS:SECS:RECIEVER:NEW_VALUE]
+							personalLog.push("REZ" + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + players[i].name + ":" + players[i].health);
 						}
 					}
 				}
@@ -114,6 +118,9 @@ var HandleMouseDown = function(event) {
 						players[apIndex].actionState = 3;
 							
 						players[apIndex].justAttacked = true;
+						
+						//[EVENT_TYPE:NAME:HOURS:MINS:SECS]
+						personalLog.push("ATTACK" + ":" + players[apIndex].name + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds());
 					}
 	}
 };
@@ -174,7 +181,7 @@ var HandleTouchDown = function(event) {
 							
 							//LOG TOKEN FORMAT
 							//[EVENT_TYPE:HOURS:MINS:SECS:RECIEVER:NEW_VALUE]
-							personalLog.push("HEAL", new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
+							personalLog.push("HEAL" + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + players[i].name + ":" + players[i].health);
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -185,7 +192,7 @@ var HandleTouchDown = function(event) {
 							
 							//LOG TOKEN FORMAT
 							//[EVENT_TYPE:HOURS:MINS:SECS:RECIEVER:NEW_VALUE]
-							personalLog.push("REZ", new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
+							personalLog.push("REZ" + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + players[i].name + ":" + players[i].health);
 						}
 					}
 				}
@@ -201,8 +208,8 @@ var HandleTouchDown = function(event) {
 							
 						players[apIndex].justAttacked = true;
 						
-						//[EVENT_TYPE:HOURS:MINS:SECS:RECIEVER:NEW_VALUE]
-						personalLog.push("ATTACK", new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[apIndex].name);
+						//[EVENT_TYPE:NAME:HOURS:MINS:SECS]
+						personalLog.push("ATTACK" + ":" + players[apIndex].name + ":" + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds());
 					}
 	}
 };

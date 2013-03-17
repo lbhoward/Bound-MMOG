@@ -2,7 +2,9 @@ var fs = require('fs'),
 	express = require('express'),
 	http = require('http'),
 	mysql = require('mysql'),
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	path = require('path'),
+	util = require('util');
 	//'./' is very important for own made modules!
 //var app = express();
 //var server = http.createServer(app);
@@ -39,7 +41,7 @@ var bossBaseHP = 100;
 var bossCurHP = bossBaseHP;
 
 //App Get Initialisation (Request/Response Handling)
-require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
+require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr, path, util);
 
 // Define a message handler
 io.sockets.on('connection', function (socket) {

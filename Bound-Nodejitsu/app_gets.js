@@ -1,4 +1,4 @@
-function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr) {
+function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr, path, util) {
 
 	//Setup BodyParser
 	app.configure(function() {
@@ -9,6 +9,18 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 	app.get('/', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'text/html'});
 		res.end(fs.readFileSync('./login.html'));
+	});
+	app.get('/log', function(req, res) {
+		var filePath = path.join(__dirname, 'log.txt');
+		var stat = fs.statSync(filePath);
+		
+		res.writeHead(200, {
+			'Content-Type': 'text',
+			'Content-Length': stat.size
+		});
+		
+		var readStream = fs.createReadStream(filePath);
+		util.pump(readStream, res);
 	});
 	app.get('/login', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'text/html'});

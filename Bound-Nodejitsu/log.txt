@@ -1,0 +1,3 @@
+This is a text log.
+Data will be written here, and access via this page (/log).
+This can then be fed to the developped tool.
