@@ -14,7 +14,7 @@ var radius = SCREEN_HEIGHT / 20;
 var calcRadius = radius;
 
 //0: Bars   1: Circles
-var GUIState = 1;
+var GUIState = 0;
 
 function SetupTouch() {
 	var el = document.getElementById('container');
@@ -36,8 +36,28 @@ var HandleMouseDown = function(event) {
 			{
 				//Bars
 				if (GUIState == 0)
-				if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-					if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
+				if (i < 10)
+					if (x > 5 && x < (SCREEN_WIDTH/8)+5)
+						if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
+					{
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 1;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[apIndex].target = players[i].name;
+							players[apIndex].actionState = 2;
+							
+							players[apIndex].justRezzed = true;
+						}
+					}
+				if (i >= 10)
+					if (x > 5  (SCREEN_WIDTH/8) && x < ((SCREEN_WIDTH/8)+(SCREEN_WIDTH/8)+5))
+						if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
@@ -146,8 +166,12 @@ function DrawBars() {
 	for (var i = 0; i < players.length; i++)
 	{
 		//HP Container (Stroke + Empty)
-		ctx.beginPath();					
-		ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
+		ctx.beginPath();	
+		if (i < 10)
+			ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
+						SCREEN_WIDTH/8, SCREEN_HEIGHT/20);
+		else
+			ctx.rect(5 + (SCREEN_WIDTH/8), ((SCREEN_HEIGHT/10)*i)+5,
 						SCREEN_WIDTH/8, SCREEN_HEIGHT/20);
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
@@ -156,8 +180,12 @@ function DrawBars() {
 		ctx.stroke();
 		
 		//HP Bar (No Stroke + Fill)
-		ctx.beginPath();					
-		ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
+		ctx.beginPath();
+		if (i < 10)
+			ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
+						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
+		else
+			ctx.rect(5 + (SCREEN_WIDTH/8), ((SCREEN_HEIGHT/10)*i)+5,
 						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
 		ctx.fillStyle = 'rgba(0,255,0,1)';
 		ctx.fill();
@@ -202,7 +230,11 @@ function DrawBars() {
 	{
 		//HP Container (Stroke + Empty)
 		ctx.beginPath();
-		ctx.rect(5, ((calcRadius*2)*i)+5,
+		if (i < 10)
+			ctx.rect(5, ((calcRadius*2)*i)+5,
+						calcRadius*2, calcRadius*2);
+		else
+			ctx.rect(5 + (calcRadius*2), ((calcRadius*2)*i)+5,
 						calcRadius*2, calcRadius*2);
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
@@ -211,8 +243,12 @@ function DrawBars() {
 		ctx.stroke();
 		
 		//HP Bar (No Stroke + Fill)
-		ctx.beginPath();					
-		ctx.rect(5, (calcRadius*2)+((calcRadius*2)*i)+5,
+		ctx.beginPath();	
+		if (i < 10)
+			ctx.rect(5, (calcRadius*2)+((calcRadius*2)*i)+5,
+						calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
+		else
+			ctx.rect(5 + (calcRadius*2), (calcRadius*2)+((calcRadius*2)*i)+5,
 						calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
 		ctx.fillStyle = 'rgba(0,255,0,1)';
 		ctx.fill();
