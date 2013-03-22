@@ -10,6 +10,10 @@ function app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayer
 		res.writeHead(200, { 'Content-type': 'text/html'});
 		res.end(fs.readFileSync('./login.html'));
 	});
+	app.get('/log', function(req, res) {
+		res.writeHead(200, { 'Content-type': 'text/plain'});
+		res.end(fs.readFileSync('./log.txt'));
+	});
 	app.get('/login', function(req, res) {
 		res.writeHead(200, { 'Content-type': 'text/html'});
 		res.end(fs.readFileSync('./login.html'));

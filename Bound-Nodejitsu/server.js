@@ -60,6 +60,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('ACTIVATE_BOSS', function() {
 		if (!bossActive)
 		{
+			fs.appendFile('log.txt', "BOSS_ACTIVE\n");
 			bossActive = true;
 			bossCurHP = 100;
 		}
@@ -67,6 +68,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('DEACTIVATE_BOSS', function() {
 		if (bossActive)
 		{
+			fs.appendFile('log.txt', "BOSS_DEACTIVE\n");
 			bossActive = false;
 			bossCurHP = 0;
 			
