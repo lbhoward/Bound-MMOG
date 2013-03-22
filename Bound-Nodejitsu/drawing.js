@@ -62,6 +62,20 @@ function init() {
 	
 	SetupTouch();
 	
+	if (players[apIndex].name == 'lbhoward')
+	document.addEventListener('keydown', function(event) {
+	if (event.keyCode == 49) //1
+	{
+		socket.emit('ACTIVATE_BOSS');
+		console.log("ACTIVATING");
+	}
+	if (event.keyCode == 50) //2
+	{
+		socket.emit('DEACTIVATE_BOSS');
+		console.log("DE-ACTIVATING");
+	}
+	});
+	
 	PhysicsLoop();
 }
 function loadDAEModel(modelPath, scale) {

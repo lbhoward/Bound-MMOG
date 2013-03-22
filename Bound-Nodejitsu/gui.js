@@ -23,21 +23,6 @@ function SetupTouch() {
 	el.addEventListener("touchstart", HandleTouchDown, false);
 };
 
-document.onkeypress=function(e) {
-	if (e.charCode == 52) //Radius Increase 4 
-		radius += 1;
-	if (e.charCode == 49) //Radius Decrease 1
-		radius -= 1;
-		
-	if (e.charCode == 54) //Width Increase 6
-		lineWidth += 1;
-	if (e.charCode == 51) //Width Decrease 3
-		lineWidth -= 1;
-		
-	if (e.charCode == 53) //Print Values 5
-		console.log("Radius: " + radius + " - Width: " + lineWidth);
-}
-
 var HandleMouseDown = function(event) {
 	event.preventDefault();
 	var x	= event.clientX;
@@ -91,8 +76,6 @@ var HandleMouseDown = function(event) {
 							players[apIndex].actionState = 1;
 							
 							players[apIndex].justHealed = true;
-							
-							personalLog.push(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds(), players[i].name, players[i].health);
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -219,7 +202,6 @@ function DrawBars() {
 	{
 		//HP Container (Stroke + Empty)
 		ctx.beginPath();
-		if (i
 		ctx.rect(5, ((calcRadius*2)*i)+5,
 						calcRadius*2, calcRadius*2);
 		ctx.strokeStyle	= "#000000"; 

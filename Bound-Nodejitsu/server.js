@@ -37,6 +37,11 @@ var getCouplings = new Array();
 //Boss variables
 var bossBaseHP = 100;
 var bossCurHP = bossBaseHP;
+var bossActive = false;
+
+//Logging System
+var personalLog = new Array();
+var time = new Date();
 
 //App Get Initialisation (Request/Response Handling)
 require('./app_gets').app_gets(app, express, fs, login_mysql, crypto, getCouplings, getPlayers, findWithAttr);
@@ -50,6 +55,24 @@ io.sockets.on('connection', function (socket) {
 		getCouplings.push({ "PID":getPlayers[index].PID,"SID":socket.id });
 		console.log(getCouplings);
 		console.log(getPlayers);
+  });
+  
+  socket.on('ACTIVATE_BOSS', function() {
+		if (!bossActive)
+		{
+			bossActive = true;
+			bossCurHP = 100;
+		}
+  });
+  socket.on('DEACTIVATE_BOSS', function() {
+		if (bossActive)
+		{
+			bossActive = false;
+			bossCurHP = 0;
+			
+			for (var i = 0; i < getPlayers.length; i++)
+				getPlayers[i].HP = 100;
+		}
   });
 
   socket.on('RESPOND', function(loc, rot, hT, aS, d) {
@@ -70,7 +93,7 @@ io.sockets.on('connection', function (socket) {
 				rezPlayer(hT);
 				break;
 			case 3:
-				hitBoss(hT);
+				hitBoss(socket.id);
 				break;
 		}
 		
@@ -87,10 +110,14 @@ io.sockets.on('connection', function (socket) {
 		getPlayers[indexPP].justRezzed = false;
   
 		var indexP = findWithAttr(getPlayers, 'USERNAME', name);
+		var preHP = getPlayers[indexP].HP;
 		getPlayers[indexP].HP += 10;
 		
 		if (getPlayers[indexP].HP > 100)
 			getPlayers[indexP].HP = 100;
+			
+		//HEALER:RECIEVER:REC_HEALTH_PRE:REC_HEALTH_POST:HOUR:SEC:MIN
+		fs.appendFile("log.txt", getPlayers[indexPP].USERNAME + ":" + getPlayers[indexP].USERNAME + ":HEAL:" + preHP + ":" + getPlayers[indexP].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
   }
   
   function rezPlayer(name) {
@@ -99,25 +126,44 @@ io.sockets.on('connection', function (socket) {
 		
 		if (getPlayers[indexP].HP > 50)
 			getPlayers[indexP].HP = 50;
+			
+		//RECIEVER:REC_HP
+		fs.appendFile("log.txt", getPlayers[indexP].USERNAME + ":REZ:" + getPlayers[indexP].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
   }
   
   function takeDamage(socketid) {
 		var indexC = findWithAttr(getCouplings, 'SID', socketid);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 		
+		var preHP = getPlayers[indexP].HP;
 		getPlayers[indexP].HP -= 15;
 		
 		if (getPlayers[indexP].HP < 0)
 			getPlayers[indexP].HP = 0;
+			
+		//RECIEVER:REC_HP_PRE:REC_HP_POST
+		fs.appendFile("log.txt", getPlayers[indexP].USERNAME + ":DAMAGE:" + preHP + ":" + getPlayers[indexP].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
   }
   
-  function hitBoss() {
-		var damageToBoss = 5*(getPlayers.length/100);
+  function hitBoss(socketid) {
+		if (bossActive)
+		{
+			var indexC = findWithAttr(getCouplings, 'SID', socketid);
+			var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
+			
+			var damageToBoss = 5*(getPlayers.length/50);
   
-		bossCurHP -= damageToBoss;
+			bossCurHP -= damageToBoss;
 		
-		if (bossCurHP < 0)
-			bossCurHP = 0;
+			if (bossCurHP <= 0)
+			{
+				bossCurHP = 0;
+				bossActive = false;
+			}
+			
+			//RECIEVER:REC_HP
+			fs.appendFile("log.txt", getPlayers[indexP].USERNAME + ":HIT_BOSS:" + bossCurHP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+		}
   }
   
   socket.on('END_ANIM', function(name, animType) {
@@ -155,7 +201,7 @@ io.sockets.on('connection', function (socket) {
 
 //Controller for Boss Abilities
 setInterval(function() {
-		if (bossCurHP > 0 && getPlayers.length > 0)
+		if (bossActive && getPlayers.length > 0)
 		{
 			var castAbility = Math.floor((Math.random()*2)+1);
 			//var castAbility = 2;
@@ -167,7 +213,10 @@ setInterval(function() {
 				case 1:
 					fireBallTarget = Math.floor((Math.random()*getPlayers.length));
 					io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
+					var preHP = getPlayers[fireBallTarget].HP;
 					getPlayers[fireBallTarget].HP -= 15;
+					//RECIEVER:REC_HP_PRE:REC_HP_POST
+					fs.appendFile("log.txt", getPlayers[fireBallTarget].USERNAME + ":DAMAGE:" + preHP + ":" + getPlayers[fireBallTarget].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 				break;
 				
 				case 2:
@@ -188,10 +237,11 @@ setInterval(function() {
 				break;
 			}
 		}
-}, 8000);
+}, 3000);
   
   setInterval(function() {
 		io.sockets.emit('UPDATE', getPlayers, bossCurHP); 
+		time = new Date();
   }, 45);
 
 //MySQL disconnects
