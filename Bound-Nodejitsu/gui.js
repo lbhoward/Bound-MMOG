@@ -13,8 +13,8 @@ var lineWidth = 10;
 var radius = SCREEN_HEIGHT / 20;
 var calcRadius = radius;
 
-//0: Bars   1: Circles
-var GUIState = 0;
+//0: Bars   1: Circles   2: Squares
+var GUIState = 2;
 
 function SetupTouch() {
 	var el = document.getElementById('container');
@@ -34,42 +34,30 @@ var HandleMouseDown = function(event) {
 		{
 			for (var i = 0; i < players.length; i++)
 			{
+				if (i < 10)
+				{
+					var xPos = 5;
+					var yOff = 0;
+				}
+			else
+			{
+				xPos = 10 + (SCREEN_WIDTH/8);
+				yOff = SCREEN_HEIGHT;
+			}
 				//Bars
 				if (GUIState == 0)
-				if (i < 10)
-					if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-						if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
+					if (x > xPos && x < (SCREEN_WIDTH/8)+xPos)
+						if (y > (((SCREEN_HEIGHT/10)*i)+5)-yOff && y < ( ((((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20))-yOff ))
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 1;
+							players[i].health += 5;
 							
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 2;
-							
-							players[apIndex].justRezzed = true;
-						}
-					}
-				if (i >= 10)
-					if (x > 5  (SCREEN_WIDTH/8) && x < ((SCREEN_WIDTH/8)+(SCREEN_WIDTH/8)+5))
-						if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
-					{
-						if (players[i].health > 0 && players[i].health < 100)
-						{	
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 1;
-							
-							players[apIndex].justHealed = true;
-						}
-						else if (players[apIndex].justRezzed == false && players[i].health == 0)
-						{
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 2;
+							players[i].health = 40;
 							
 							players[apIndex].justRezzed = true;
 						}
@@ -92,19 +80,51 @@ var HandleMouseDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 1;
+							players[i].health += 5;
 							
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
-							players[apIndex].target = players[i].name;
-							players[apIndex].actionState = 2;
+							players[i].health = 40;
 							
 							players[apIndex].justRezzed = true;
 						}
 					}
+				}
+				
+				//Squares
+				if (GUIState == 2)
+				{
+					if (i < 10)
+					{
+						var xPos = 0;
+						var yOff = 0;
+					}
+					else
+					{
+						xPos = calcRadius*2;
+						yOff = SCREEN_HEIGHT;
+					}
+					
+					ctx.rect(xPos, ((calcRadius*2)*i)-yOff,
+					calcRadius*2, calcRadius*2);
+					if (x > xPos && x < (calcRadius*2)+xPos)
+						if (y > ((calcRadius*2)*i)-yOff && y < (calcRadius*2)+((calcRadius*2)*i)-yOff)
+					{
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[i].health += 5;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[i].health = 40;
+							
+							players[apIndex].justRezzed = true;
+						}
+					}					
 				}
 			}
 		}
@@ -126,36 +146,117 @@ var HandleTouchDown = function(event) {
 	var x	= event.touches[0].pageX;
 	var y	= event.touches[0].pageY;
 	
-	if (players[apIndex].justHealed == false)
+	if (players[apIndex].health > 0)
 	{
-		for (var i = 0; i < players.length; i++)
+		if (players[apIndex].justHealed == false)
 		{
-			if (x > 5 && x < (SCREEN_WIDTH/8)+5)
-				if (y > ((SCREEN_HEIGHT/10)*i)+5 && y < ( (((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20) ))
+			for (var i = 0; i < players.length; i++)
+			{
+				if (i < 10)
 				{
-					if (players[i].health > 1)
+					var xPos = 5;
+					var yOff = 0;
+				}
+			else
+			{
+				xPos = 10 + (SCREEN_WIDTH/8);
+				yOff = SCREEN_HEIGHT;
+			}
+				//Bars
+				if (GUIState == 0)
+					if (x > xPos && x < (SCREEN_WIDTH/8)+xPos)
+						if (y > (((SCREEN_HEIGHT/10)*i)+5)-yOff && y < ( ((((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20))-yOff ))
 					{
-						console.log("Players Health was: " + players[i].health);	
-						socket.emit('HEAL_PLAYER', players[i].name);
-						players[apIndex].justHealed = true;
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[i].health += 5;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[i].health = 40;
+							
+							players[apIndex].justRezzed = true;
+						}
 					}
-					else if (players[apIndex].justRezzed == false)
+					
+				//Circles
+				if (GUIState == 1)
+				{
+				if (i < 10)
+				{
+					var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
+				}
+				else
+				{
+					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-10)));
+				}
+
+				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
+				if (distance <= calcRadius)
 					{
-						console.log("REZZING!");
-						socket.emit ('REZ_PLAYER', players[i].name);
-						players[apIndex].justRezzed = true;
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[i].health += 5;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[i].health = 40;
+							
+							players[apIndex].justRezzed = true;
+						}
 					}
 				}
-		}
-	}
-	
-		if (players[apIndex].justAttacked == false)
-		if (x > iconX && x < SCREEN_WIDTH)
-			if (y > iconSize && y < iconSize*2)
-			{
-				socket.emit('HIT_BOSS');
-				players[apIndex].justAttacked = true;
+				
+				//Squares
+				if (GUIState == 2)
+				{
+					if (i < 10)
+					{
+						var xPos = 0;
+						var yOff = 0;
+					}
+					else
+					{
+						xPos = calcRadius*2;
+						yOff = SCREEN_HEIGHT;
+					}
+					
+					ctx.rect(xPos, ((calcRadius*2)*i)-yOff,
+					calcRadius*2, calcRadius*2);
+					if (x > xPos && x < (calcRadius*2)+xPos)
+						if (y > ((calcRadius*2)*i)-yOff && y < (calcRadius*2)+((calcRadius*2)*i)-yOff)
+					{
+						if (players[i].health > 0 && players[i].health < 100)
+						{	
+							players[i].health += 5;
+							
+							players[apIndex].justHealed = true;
+						}
+						else if (players[apIndex].justRezzed == false && players[i].health == 0)
+						{
+							players[i].health = 40;
+							
+							players[apIndex].justRezzed = true;
+						}
+					}					
+				}
 			}
+		}
+		
+		if (players[apIndex].justAttacked == false)
+			if (x > iconX && x < SCREEN_WIDTH)
+				if (y > iconSize && y < iconSize*2)
+					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
+					{
+						players[apIndex].actionState = 3;
+							
+						players[apIndex].justAttacked = true;
+					}
+	}
 };
 
 function DrawBars() {
@@ -165,30 +266,35 @@ function DrawBars() {
 	if (GUIState == 0)
 	for (var i = 0; i < players.length; i++)
 	{
+		if (i < 10)
+		{
+			var xPos = 5;
+			var yOff = 0;
+		}
+		else
+		{
+			xPos = 10 + (SCREEN_WIDTH/8);
+			yOff = SCREEN_HEIGHT;
+		}
+	
+		//HP Bar (No Stroke + Fill)
+		ctx.beginPath();
+		ctx.rect(xPos, (((SCREEN_HEIGHT/10)*i)+5)-yOff,
+				(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
+		ctx.fillStyle = 'rgba(0,255,0,1)';
+		ctx.fill();
 		//HP Container (Stroke + Empty)
 		ctx.beginPath();	
-		if (i < 10)
-			ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
-						SCREEN_WIDTH/8, SCREEN_HEIGHT/20);
+		ctx.rect(xPos, (((SCREEN_HEIGHT/10)*i)+5)-yOff,
+				(SCREEN_WIDTH/8), SCREEN_HEIGHT/20);
+		if (i == 0)
+			ctx.strokeStyle	= 'rgba(255,0,0,1)';
 		else
-			ctx.rect(5 + (SCREEN_WIDTH/8), ((SCREEN_HEIGHT/10)*i)+5,
-						SCREEN_WIDTH/8, SCREEN_HEIGHT/20);
-		ctx.strokeStyle	= "#000000"; 
-		ctx.lineWidth	= 1;
+			ctx.strokeStyle = 'rgba(0,0,0,1)';
+		ctx.lineWidth	= 2;
 		ctx.fillStyle = 'rgba(0,255,0,0)';
 		ctx.fill();
 		ctx.stroke();
-		
-		//HP Bar (No Stroke + Fill)
-		ctx.beginPath();
-		if (i < 10)
-			ctx.rect(5, ((SCREEN_HEIGHT/10)*i)+5,
-						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
-		else
-			ctx.rect(5 + (SCREEN_WIDTH/8), ((SCREEN_HEIGHT/10)*i)+5,
-						(SCREEN_WIDTH/8)*(players[i].health/100), SCREEN_HEIGHT/20);
-		ctx.fillStyle = 'rgba(0,255,0,1)';
-		ctx.fill();
 	}
 	
 	//Player Circle Arc  **LINEWIDTH MUST BE 2*RADIUS
@@ -228,30 +334,31 @@ function DrawBars() {
 	if (GUIState == 2)
 	for (var i = 0; i < players.length; i++)
 	{
+		if (i < 10)
+		{
+			var xPos = 0;
+			var yOff = 0;
+		}
+		else
+		{
+			xPos = calcRadius*2;
+			yOff = SCREEN_HEIGHT;
+		}
+		//HP Bar (No Stroke + Fill)
+		ctx.beginPath();	
+		ctx.rect(xPos, (calcRadius*2)+((calcRadius*2)*i)-yOff,
+				calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
+		ctx.fillStyle = 'rgba(0,255,0,1)';
+		ctx.fill();
 		//HP Container (Stroke + Empty)
 		ctx.beginPath();
-		if (i < 10)
-			ctx.rect(5, ((calcRadius*2)*i)+5,
-						calcRadius*2, calcRadius*2);
-		else
-			ctx.rect(5 + (calcRadius*2), ((calcRadius*2)*i)+5,
-						calcRadius*2, calcRadius*2);
+		ctx.rect(xPos, ((calcRadius*2)*i)-yOff,
+				calcRadius*2, calcRadius*2);
 		ctx.strokeStyle	= "#000000"; 
 		ctx.lineWidth	= 1;
 		ctx.fillStyle = 'rgba(0,255,0,0)';
 		ctx.fill();
 		ctx.stroke();
-		
-		//HP Bar (No Stroke + Fill)
-		ctx.beginPath();	
-		if (i < 10)
-			ctx.rect(5, (calcRadius*2)+((calcRadius*2)*i)+5,
-						calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
-		else
-			ctx.rect(5 + (calcRadius*2), (calcRadius*2)+((calcRadius*2)*i)+5,
-						calcRadius*2, -((calcRadius*2)*(players[i].health/100)));
-		ctx.fillStyle = 'rgba(0,255,0,1)';
-		ctx.fill();
 	}
 	
 	//Boss Bar (Stroke + Empty)

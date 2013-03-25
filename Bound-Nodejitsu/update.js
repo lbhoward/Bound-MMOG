@@ -80,6 +80,11 @@ function UpdatePlayers() {
 	
 	for (var i = 0; i < players.length; i++)
 	{
+		if (players[i].Bot)
+		{
+			players[i].loc.x += Math.round(Math.random()) * 2 - 1;
+			players[i].loc.z += Math.round(Math.random()) * 2 - 1;
+		}
 		if (players[i].readyState == true && players[i].onScreen == false)
 		{
 			console.log("Loading new Player to Screen");

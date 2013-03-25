@@ -1,4 +1,4 @@
-function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
+function Bot(setGeo, setMat, setLoc, setRot, setName, setHP){
 	//Location and rotation vectors
 	this.loc = new Vector3(setLoc.x, setLoc.y, setLoc.z) || new Vector3();
 	this.rot = new Vector3(setRot.x, setRot.y, setRot.z) || new Vector3();
@@ -17,7 +17,6 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 	this.target = "";
 	this.actionState = 0;
 	this.damaged = false;
-	this.Bot = setBot;
 	
 	//Animation Stuff
 	this.clock = new THREE.Clock();

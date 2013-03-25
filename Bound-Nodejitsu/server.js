@@ -86,14 +86,6 @@ io.sockets.on('connection', function (socket) {
 		
 		switch (aS)
 		{
-			case 0:
-				break;
-			case 1:
-				healPlayer(socket.id, hT);
-				break;
-			case 2:
-				rezPlayer(hT);
-				break;
 			case 3:
 				hitBoss(socket.id);
 				break;
@@ -213,12 +205,10 @@ setInterval(function() {
 			switch (castAbility)
 			{
 				case 1:
-					fireBallTarget = Math.floor((Math.random()*getPlayers.length));
+					fireBallTarget = Math.floor((Math.random()*20));
 					io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
-					var preHP = getPlayers[fireBallTarget].HP;
-					getPlayers[fireBallTarget].HP -= 15;
 					//RECIEVER:REC_HP_PRE:REC_HP_POST
-					fs.appendFile("log.txt", getPlayers[fireBallTarget].USERNAME + ":DAMAGE:" + preHP + ":" + getPlayers[fireBallTarget].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+					//fs.appendFile("log.txt", getPlayers[fireBallTarget].USERNAME + ":DAMAGE:" + preHP + ":" + getPlayers[fireBallTarget].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 				break;
 				
 				case 2:

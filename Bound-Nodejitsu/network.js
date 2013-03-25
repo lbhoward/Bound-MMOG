@@ -11,13 +11,13 @@ socket = io.connect();
 socket.on('connect', function () {
 	socket.on('CON_ACCEPT', function(getPlayers, bossHP) {
 		
-		for (var i = 0; i < getPlayers.length; i++)
+		players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[0].X,getPlayers[0].Y,getPlayers[0].Z), new Vector3(0,getPlayers[0].R,0), getPlayers[0].USERNAME, 100, false));
+
+		apIndex = 0;
+
+		for (var i = 0; i < 19; i++)
 		{
-			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
-			if (getPlayers[i].USERNAME == playerName)
-			{
-				apIndex = i;
-			}
+			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[0].X,getPlayers[0].Y,getPlayers[0].Z), new Vector3(0,getPlayers[0].R,0), "botNo" + i, 100, true));
 		}
 		
 		boss = new Boss("Models/Boss/boss.js", bossHP);
@@ -38,20 +38,6 @@ socket.on('PLAYER_LEFT' , function(plIndex) {
 socket.on('UPDATE', function(getPlayers, bossHP) {
 	for (var i = 0; i < getPlayers.length; i++)
 	{	
-		if (players[i] == undefined)
-		{
-			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[i].X,getPlayers[i].Y,getPlayers[i].Z), new Vector3(0,getPlayers[i].R,0), getPlayers[i].USERNAME, getPlayers[i].HP));
-		}
-			
-		if (i != apIndex)
-		{
-			players[i].loc = new Vector3(getPlayers[i].X, getPlayers[i].Y, getPlayers[i].Z);
-			players[i].rot.y = getPlayers[i].R;
-			players[i].justAttacked = getPlayers[i].justAttacked;
-			players[i].justHealed = getPlayers[i].justHealed;
-			players[i].justRezzed = getPlayers[i].justRezzed;
-		}
-		players[i].health = getPlayers[i].HP;
 	}
 	boss.health = bossHP;
 });
@@ -61,6 +47,7 @@ socket.on('BOSS_CAST', function(castAbility, targetData) {
 	{
 		case 1:
 			boss.fireBallTarget = players[targetData];
+			players[targetData].health -= 15;
 		break;
 		
 		case 2:
