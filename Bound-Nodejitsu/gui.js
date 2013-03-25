@@ -51,8 +51,10 @@ var HandleMouseDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP
+							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
@@ -80,8 +82,10 @@ var HandleMouseDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP
+							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
@@ -114,8 +118,10 @@ var HandleMouseDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP
+							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)

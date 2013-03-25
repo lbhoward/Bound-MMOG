@@ -76,6 +76,10 @@ io.sockets.on('connection', function (socket) {
 				getPlayers[i].HP = 100;
 		}
   });
+  
+  socket.on('LOG', function(logString) {
+		fs.appendFile("log.txt", logString);
+  });
 
   socket.on('RESPOND', function(loc, rot, hT, aS, d) {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);

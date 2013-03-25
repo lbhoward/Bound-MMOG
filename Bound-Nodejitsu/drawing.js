@@ -74,6 +74,12 @@ function init() {
 		socket.emit('DEACTIVATE_BOSS');
 		console.log("DE-ACTIVATING");
 	}
+	if (event.keyCode == 81) //Q
+		GUIState = 0;
+	if (event.keyCode == 87) //W
+		GUIState = 1;
+	if (event.keyCode == 69) //E
+		GUIState = 2;
 	});
 	
 	PhysicsLoop();
