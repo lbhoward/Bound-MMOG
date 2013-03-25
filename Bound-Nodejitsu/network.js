@@ -23,6 +23,7 @@ socket.on('connect', function () {
 		boss = new Boss("Models/Boss/boss.js", bossHP);
 		
 		socket.emit('REGISTER', playerName);
+		socket.emit('DETAILS', players[0].name, SCREEN_WIDTH, SCREEN_HEIGHT);
 		init();
 	});
 });

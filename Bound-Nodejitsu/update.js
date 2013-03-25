@@ -82,8 +82,10 @@ function UpdatePlayers() {
 	{
 		if (players[i].Bot)
 		{
-			players[i].loc.x += Math.round(Math.random()) * 2 - 1;
-			players[i].loc.z += Math.round(Math.random()) * 2 - 1;
+			if (players[i].loc.x > 10)
+				players[i].loc.x -= 0.5;
+			else if (players[i].loc.x < -10)
+				players[i].loc.x += 0.5;
 		}
 		if (players[i].readyState == true && players[i].onScreen == false)
 		{
@@ -155,14 +157,18 @@ function HandleInput()
 
 function HandleCollisions()
 {
-		for (var j = 0; j < hazards.length; j++)
+		for (var i = 0; i < players.length; i++)
 		{
-			if ( Math.pow(players[apIndex].loc.x - hazards[j].loc.x,2) + Math.pow(hazards[j].loc.z - players[apIndex].loc.z,2) <= Math.pow(hazards[j].rad + players[apIndex].rad,2) )
+			for (var j = 0; j < hazards.length; j++)
 			{
-				players[apIndex].inAOE = true;
-				break;
+				//var i = 0;
+				if (( Math.pow(players[i].loc.x - hazards[j].loc.x,2) + Math.pow(hazards[j].loc.z - players[i].loc.z,2)) <= (Math.pow(hazards[j].rad + players[i].rad,2)) )
+				{
+					players[i].inAOE = true;
+					break;
+				}
+				else
+					players[i].inAOE = false;
 			}
-			else
-				players[apIndex].inAOE = false;
-		}
+		}	
 }

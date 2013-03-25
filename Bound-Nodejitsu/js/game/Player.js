@@ -71,6 +71,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 			if (this.inAOE == true)
 			{
 				this.damaged = true;
+				this.health -= 10;
 				this.damageTimer = 1.25;
 			}
 			else

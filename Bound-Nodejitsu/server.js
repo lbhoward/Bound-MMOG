@@ -77,6 +77,10 @@ io.sockets.on('connection', function (socket) {
 		}
   });
   
+  socket.on('DETAILS', function(name,w,h) {
+		fs.appendFile('log.txt', "Connected: "+name+" - Width: "+w+" - Height: "+h+"\n");
+  });
+  
   socket.on('LOG', function(logString) {
 		fs.appendFile("log.txt", logString);
   });
