@@ -14,7 +14,8 @@ socket.on('connect', function () {
 		players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[0].X,getPlayers[0].Y,getPlayers[0].Z), new Vector3(0,getPlayers[0].R,0), getPlayers[0].USERNAME, 100, false));
 
 		apIndex = 0;
-
+		
+		if (playerName != "lbhoward")
 		for (var i = 0; i < 19; i++)
 		{
 			players.push(new Player(playerGeo, playerMat, new Vector3(getPlayers[0].X,getPlayers[0].Y,getPlayers[0].Z), new Vector3(0,getPlayers[0].R,0), "botNo" + i, 100, true));
@@ -36,6 +37,21 @@ socket.on('PLAYER_LEFT' , function(plIndex) {
 	console.log("Player left: New apIndex is: " + apIndex);
 });
 
+socket.on('DEACT', function() {
+	for (var i = 0; i < players.length; ++i)
+		players[i].health = 100;
+});
+
+socket.on('SWITCH_BARS', function() {
+	GUIState = 0;
+});
+socket.on('SWITCH_CIRCS', function() {
+	GUIState = 1;
+});
+socket.on('SWITCH_SQUARES', function() {
+	GUIState = 2;
+});
+
 socket.on('UPDATE', function(getPlayers, bossHP) {
 	for (var i = 0; i < getPlayers.length; i++)
 	{	
@@ -47,8 +63,13 @@ socket.on('BOSS_CAST', function(castAbility, targetData) {
 	switch(castAbility)
 	{
 		case 1:
-			boss.fireBallTarget = players[targetData];
-			players[targetData].health -= 15;
+			for (var i = 0; i < 3; ++i)
+			{
+				pHP = players[targetData[i]].health;
+				players[targetData[i]].health -= Math.floor((Math.random()*30));
+				var time = new Date();
+				socket.emit('LOG', "DAM:"+players[targetData[i]].name+":"+pHP+":"+players[targetData[i]].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+			}
 		break;
 		
 		case 2:

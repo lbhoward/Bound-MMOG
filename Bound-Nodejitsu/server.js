@@ -57,6 +57,19 @@ io.sockets.on('connection', function (socket) {
 		console.log(getPlayers);
   });
   
+  socket.on('BARS', function() {
+	socket.broadcast.emit('SWITCH_BARS');
+	fs.appendFile('log.txt', "Switching to Bars GUI\n");
+  });
+  socket.on('CIRCS', function() {
+	socket.broadcast.emit('SWITCH_CIRCS');
+	fs.appendFile('log.txt', "Switching to Circles GUI\n");
+  });
+  socket.on('SQUARES', function() {
+	socket.broadcast.emit('SWITCH_SQUARES');
+	fs.appendFile('log.txt', "Switching to Squares GUI\n");
+  });
+  
   socket.on('ACTIVATE_BOSS', function() {
 		if (!bossActive)
 		{
@@ -75,6 +88,7 @@ io.sockets.on('connection', function (socket) {
 			for (var i = 0; i < getPlayers.length; i++)
 				getPlayers[i].HP = 100;
 		}
+		socket.broadcast.emit('DEACT');
   });
   
   socket.on('DETAILS', function(name,w,h) {
@@ -119,6 +133,7 @@ io.sockets.on('connection', function (socket) {
 			getPlayers[indexP].HP = 100;
 			
 		//HEALER:RECIEVER:REC_HEALTH_PRE:REC_HEALTH_POST:HOUR:SEC:MIN
+		time = new Date();
 		fs.appendFile("log.txt", getPlayers[indexPP].USERNAME + ":" + getPlayers[indexP].USERNAME + ":HEAL:" + preHP + ":" + getPlayers[indexP].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
   }
   
@@ -153,7 +168,7 @@ io.sockets.on('connection', function (socket) {
 			var indexC = findWithAttr(getCouplings, 'SID', socketid);
 			var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
 			
-			var damageToBoss = 5*(getPlayers.length/50);
+			var damageToBoss = 1.5;
   
 			bossCurHP -= damageToBoss;
 		
@@ -164,7 +179,7 @@ io.sockets.on('connection', function (socket) {
 			}
 			
 			//RECIEVER:REC_HP
-			fs.appendFile("log.txt", getPlayers[indexP].USERNAME + ":HIT_BOSS:" + bossCurHP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+			fs.appendFile("log.txt", "HIT_BOSS:" + bossCurHP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 		}
   }
   
@@ -205,15 +220,22 @@ io.sockets.on('connection', function (socket) {
 setInterval(function() {
 		if (bossActive && getPlayers.length > 0)
 		{
-			var castAbility = Math.floor((Math.random()*2)+1);
-			//var castAbility = 2;
-			var fireBallTarget;
+			var castAbility = 1;
+			var availableTargets = new Array();
+			for (var i = 0; i < 20; ++i)
+				availableTargets.push(i);
+			var fireBallTarget = new Array();
 			var castLocations = new Array();
 			
 			switch (castAbility)
 			{
 				case 1:
-					fireBallTarget = Math.floor((Math.random()*20));
+					for (var i = 0; i < 3; ++i)
+					{
+						var selection = Math.floor((Math.random()*availableTargets.length));
+						fireBallTarget.push(availableTargets[selection]);
+						availableTargets.splice(selection,1);
+					}
 					io.sockets.emit('BOSS_CAST', castAbility, fireBallTarget);
 					//RECIEVER:REC_HP_PRE:REC_HP_POST
 					//fs.appendFile("log.txt", getPlayers[fireBallTarget].USERNAME + ":DAMAGE:" + preHP + ":" + getPlayers[fireBallTarget].HP + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");

@@ -14,7 +14,7 @@ var radius = SCREEN_HEIGHT / 20;
 var calcRadius = radius;
 
 //0: Bars   1: Circles   2: Squares
-var GUIState = 2;
+var GUIState = 0;
 
 function SetupTouch() {
 	var el = document.getElementById('container');
@@ -53,8 +53,9 @@ var HandleMouseDown = function(event) {
 						{	
 							var pHP = players[i].health;
 							players[i].health += 5;
-							//HEAL:PreviousHP:NewHP
-							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
+							//HEAL:PreviousHP:NewHP:TIME
+							var time = new Date();
+							socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
@@ -152,7 +153,7 @@ var HandleTouchDown = function(event) {
 	var x	= event.touches[0].pageX;
 	var y	= event.touches[0].pageY;
 	
-	if (players[apIndex].health > 0)
+		if (players[apIndex].health > 0)
 	{
 		if (players[apIndex].justHealed == false)
 		{
@@ -175,8 +176,11 @@ var HandleTouchDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP:TIME
+							var time = new Date();
+							socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
@@ -204,8 +208,10 @@ var HandleTouchDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP
+							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
@@ -238,8 +244,10 @@ var HandleTouchDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
+							var pHP = players[i].health;
 							players[i].health += 5;
-							
+							//HEAL:PreviousHP:NewHP
+							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)

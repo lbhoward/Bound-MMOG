@@ -62,7 +62,7 @@ function init() {
 	
 	SetupTouch();
 	
-	if (players[apIndex].name == 'lbhoward')
+	if (playerName == 'lbhoward')
 	document.addEventListener('keydown', function(event) {
 	if (event.keyCode == 49) //1
 	{
@@ -75,11 +75,20 @@ function init() {
 		console.log("DE-ACTIVATING");
 	}
 	if (event.keyCode == 81) //Q
+	{
 		GUIState = 0;
+		socket.emit('BARS');
+	}
 	if (event.keyCode == 87) //W
+	{
 		GUIState = 1;
+		socket.emit('CIRCS');
+	}
 	if (event.keyCode == 69) //E
+	{
 		GUIState = 2;
+		socket.emit('SQUARES');
+	}
 	});
 	
 	PhysicsLoop();
