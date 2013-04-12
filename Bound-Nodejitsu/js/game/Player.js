@@ -10,7 +10,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 	//Identifier
 	this.name = setName;
 	this.health = setHP; this.damageTimer = 0; this.inAOE = false;
-	this.healTimer = 1.5; this.justHealed = false;
+	this.healTimer = 1; this.justHealed = false;
 	this.attackTimer = 1.0; this.justAttacked = false;
 	this.rezTimer = 120; this.justRezzed = false;
 	this.rad = 15;
@@ -38,7 +38,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 			
 			if (this.healTimer <= 0)
 			{
-				this.healTimer = 1.5;
+				this.healTimer = 1;
 				this.justHealed = false;
 				socket.emit('END_ANIM', this.name, 1);
 			}
@@ -60,7 +60,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 			
 			if (this.rezTimer <= 0)
 			{
-				this.rezTimer = 120;
+				this.rezTimer = 20;
 				this.justRezzed = false;
 				socket.emit('END_ANIM', this.name, 3);
 			}

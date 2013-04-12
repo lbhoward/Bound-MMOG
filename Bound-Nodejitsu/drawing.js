@@ -91,6 +91,37 @@ function init() {
 	}
 	});
 	
+	if (playerName != 'lbhoward')
+	document.addEventListener('keydown', function(event) {
+	if (event.keyCode == 32) //Space Bar
+	{
+		if (players[apIndex].justAttacked == false)
+			if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
+			{
+				players[apIndex].actionState = 3;
+							
+				players[apIndex].justAttacked = true;
+			}
+	}
+	if (event.keyCode == 87) //W Forward
+	{
+		players[apIndex].loc = new Vector3(players[apIndex].loc.x, 0, players[apIndex].loc.z + ((-0.15)*dT));
+	}
+	if (event.keyCode == 65) //A Left
+	{
+		players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((-0.15)*dT), 0, players[apIndex].loc.z);
+	}
+	if (event.keyCode == 83) //S Backward
+	{
+		players[apIndex].loc = new Vector3(players[apIndex].loc.x, 0, players[apIndex].loc.z + ((0.15)*dT));
+	}
+	if (event.keyCode == 68) //D Right
+	{
+		players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((0.15)*dT), 0, players[apIndex].loc.z);
+	}
+	
+	});
+	
 	PhysicsLoop();
 }
 function loadDAEModel(modelPath, scale) {

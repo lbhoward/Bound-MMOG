@@ -84,7 +84,7 @@ var HandleMouseDown = function(event) {
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
 							var pHP = players[i].health;
-							players[i].health += 5;
+							players[i].health += 15;
 							//HEAL:PreviousHP:NewHP
 							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
@@ -120,7 +120,7 @@ var HandleMouseDown = function(event) {
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
 							var pHP = players[i].health;
-							players[i].health += 5;
+							players[i].health += 10;
 							//HEAL:PreviousHP:NewHP
 							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
@@ -135,16 +135,6 @@ var HandleMouseDown = function(event) {
 				}
 			}
 		}
-		
-		if (players[apIndex].justAttacked == false)
-			if (x > iconX && x < SCREEN_WIDTH)
-				if (y > iconSize && y < iconSize*2)
-					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
-					{
-						players[apIndex].actionState = 3;
-							
-						players[apIndex].justAttacked = true;
-					}
 	}
 };
 
@@ -177,7 +167,7 @@ var HandleTouchDown = function(event) {
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
 							var pHP = players[i].health;
-							players[i].health += 5;
+							players[i].health += 15;
 							//HEAL:PreviousHP:NewHP:TIME
 							var time = new Date();
 							socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
@@ -209,7 +199,7 @@ var HandleTouchDown = function(event) {
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
 							var pHP = players[i].health;
-							players[i].health += 5;
+							players[i].health += 15;
 							//HEAL:PreviousHP:NewHP
 							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
@@ -245,7 +235,7 @@ var HandleTouchDown = function(event) {
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
 							var pHP = players[i].health;
-							players[i].health += 5;
+							players[i].health += 15;
 							//HEAL:PreviousHP:NewHP
 							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
 							players[apIndex].justHealed = true;
@@ -262,8 +252,6 @@ var HandleTouchDown = function(event) {
 		}
 		
 		if (players[apIndex].justAttacked == false)
-			if (x > iconX && x < SCREEN_WIDTH)
-				if (y > iconSize && y < iconSize*2)
 					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
 					{
 						players[apIndex].actionState = 3;
@@ -280,6 +268,8 @@ function DrawBars() {
 	if (GUIState == 0)
 	for (var i = 0; i < players.length; i++)
 	{
+		if (players[i].health < 0)
+			players[i].health = 0;
 		if (i < 10)
 		{
 			var xPos = 5;
@@ -315,6 +305,9 @@ function DrawBars() {
 	if (GUIState == 1)
 	for (var i = 0; i < players.length; i++)
 	{
+		if (players[i].health < 0)
+			players[i].health = 0;
+			
 		ctx.beginPath();
 		ctx.strokeStyle	= 'rgba(0,255,0,1)'; 
 		ctx.fillStyle = 'rgba(0,255,0,1)';
@@ -348,6 +341,9 @@ function DrawBars() {
 	if (GUIState == 2)
 	for (var i = 0; i < players.length; i++)
 	{
+		if (players[i].health < 0)
+			players[i].health = 0;
+			
 		if (i < 10)
 		{
 			var xPos = 0;
