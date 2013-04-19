@@ -612,3 +612,10 @@ HEAL:61:76
 HIT_BOSS:1:12:4:0
 HEAL:76:91
 HIT_BOSS:0:12:4:2
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 671
+Connected: a - Width: 1186 - Height: 443

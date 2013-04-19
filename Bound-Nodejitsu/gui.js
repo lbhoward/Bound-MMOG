@@ -28,114 +28,7 @@ var HandleMouseDown = function(event) {
 	var x	= event.clientX;
 	var y	= event.clientY;
 	
-	if (players[apIndex].health > 0)
-	{
-		if (players[apIndex].justHealed == false)
-		{
-			for (var i = 0; i < players.length; i++)
-			{
-				if (i < 10)
-				{
-					var xPos = 5;
-					var yOff = 0;
-				}
-			else
-			{
-				xPos = 10 + (SCREEN_WIDTH/8);
-				yOff = SCREEN_HEIGHT;
-			}
-				//Bars
-				if (GUIState == 0)
-					if (x > xPos && x < (SCREEN_WIDTH/8)+xPos)
-						if (y > (((SCREEN_HEIGHT/10)*i)+5)-yOff && y < ( ((((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20))-yOff ))
-					{
-						if (players[i].health > 0 && players[i].health < 100)
-						{	
-							var pHP = players[i].health;
-							players[i].health += 5;
-							//HEAL:PreviousHP:NewHP:TIME
-							var time = new Date();
-							socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
-							players[apIndex].justHealed = true;
-						}
-						else if (players[apIndex].justRezzed == false && players[i].health == 0)
-						{
-							players[i].health = 40;
-							
-							players[apIndex].justRezzed = true;
-						}
-					}
-					
-				//Circles
-				if (GUIState == 1)
-				{
-				if (i < 10)
-				{
-					var distanceX = x-calcRadius; var distanceY = y-(calcRadius+((calcRadius*2)*i));
-				}
-				else
-				{
-					var distanceX = x-(calcRadius*3); var distanceY = y-(calcRadius+((calcRadius*2)*(i-10)));
-				}
-
-				var distance = Math.sqrt((distanceX*distanceX) + (distanceY*distanceY));
-				if (distance <= calcRadius)
-					{
-						if (players[i].health > 0 && players[i].health < 100)
-						{	
-							var pHP = players[i].health;
-							players[i].health += 15;
-							//HEAL:PreviousHP:NewHP
-							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
-							players[apIndex].justHealed = true;
-						}
-						else if (players[apIndex].justRezzed == false && players[i].health == 0)
-						{
-							players[i].health = 40;
-							
-							players[apIndex].justRezzed = true;
-						}
-					}
-				}
-				
-				//Squares
-				if (GUIState == 2)
-				{
-					if (i < 10)
-					{
-						var xPos = 0;
-						var yOff = 0;
-					}
-					else
-					{
-						xPos = calcRadius*2;
-						yOff = SCREEN_HEIGHT;
-					}
-					
-					ctx.rect(xPos, ((calcRadius*2)*i)-yOff,
-					calcRadius*2, calcRadius*2);
-					if (x > xPos && x < (calcRadius*2)+xPos)
-						if (y > ((calcRadius*2)*i)-yOff && y < (calcRadius*2)+((calcRadius*2)*i)-yOff)
-					{
-						if (players[i].health > 0 && players[i].health < 100)
-						{	
-							var pHP = players[i].health;
-							players[i].health += 10;
-							//HEAL:PreviousHP:NewHP
-							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
-							players[apIndex].justHealed = true;
-						}
-						else if (players[apIndex].justRezzed == false && players[i].health == 0)
-						{
-							players[i].health = 40;
-							
-							players[apIndex].justRezzed = true;
-						}
-					}					
-				}
-			}
-		}
-	}
+	GUIInteract(x, y);
 };
 
 var HandleTouchDown = function(event) {
@@ -143,35 +36,49 @@ var HandleTouchDown = function(event) {
 	var x	= event.touches[0].pageX;
 	var y	= event.touches[0].pageY;
 	
-		if (players[apIndex].health > 0)
+	GUIInteract(x, y);
+};
+
+var GUIInteract = function(x, y) {
+	if (players[apIndex].health > 0)
 	{
-		if (players[apIndex].justHealed == false)
+		for (var i = 0; i < players.length; i++)
 		{
-			for (var i = 0; i < players.length; i++)
+			if (i < 10)
 			{
-				if (i < 10)
-				{
-					var xPos = 5;
-					var yOff = 0;
-				}
+				var xPos = 5;
+				var yOff = 0;
+			}
 			else
 			{
 				xPos = 10 + (SCREEN_WIDTH/8);
 				yOff = SCREEN_HEIGHT;
 			}
-				//Bars
-				if (GUIState == 0)
-					if (x > xPos && x < (SCREEN_WIDTH/8)+xPos)
-						if (y > (((SCREEN_HEIGHT/10)*i)+5)-yOff && y < ( ((((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20))-yOff ))
+			//Bars
+			if (GUIState == 0)
+				if (x > xPos && x < (SCREEN_WIDTH/8)+xPos)
+					if (y > (((SCREEN_HEIGHT/10)*i)+5)-yOff && y < ( ((((SCREEN_HEIGHT/10)*i)+5) + (SCREEN_HEIGHT/20))-yOff ))
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							var pHP = players[i].health;
-							players[i].health += 15;
-							//HEAL:PreviousHP:NewHP:TIME
-							var time = new Date();
-							socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
-							players[apIndex].justHealed = true;
+							if (players[i].healType == 0 && !players[i].justHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 15;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justHealed = true;
+							}
+							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 35;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "BIGHEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justBigHealed = true;
+							}
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -198,11 +105,24 @@ var HandleTouchDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							var pHP = players[i].health;
-							players[i].health += 15;
-							//HEAL:PreviousHP:NewHP
-							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
-							players[apIndex].justHealed = true;
+							if (players[i].healType == 0 && !players[i].justHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 15;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justHealed = true;
+							}
+							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 35;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "BIGHEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justBigHealed = true;
+							}
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -234,11 +154,24 @@ var HandleTouchDown = function(event) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							var pHP = players[i].health;
-							players[i].health += 15;
-							//HEAL:PreviousHP:NewHP
-							socket.emit('LOG', "HEAL:"+pHP+":"+players[i].health+"\n");
-							players[apIndex].justHealed = true;
+							if (players[i].healType == 0 && !players[i].justHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 15;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justHealed = true;
+							}
+							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							{
+								var pHP = players[i].health;
+								players[i].health += 35;
+								//HEAL:PreviousHP:NewHP:TIME
+								var time = new Date();
+								socket.emit('LOG', "BIGHEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
+								players[apIndex].justBigHealed = true;
+							}
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -249,15 +182,14 @@ var HandleTouchDown = function(event) {
 					}					
 				}
 			}
-		}
 		
 		if (players[apIndex].justAttacked == false)
-					if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
-					{
-						players[apIndex].actionState = 3;
+				if (Math.sqrt(Math.pow((players[apIndex].loc.x-boss.loc.x),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)+Math.pow((players[apIndex].loc.y-boss.loc.y),2)) < 55)
+				{
+					players[apIndex].actionState = 3;
 							
-						players[apIndex].justAttacked = true;
-					}
+					players[apIndex].justAttacked = true;
+				}
 	}
 };
 
@@ -395,26 +327,26 @@ function DrawIcons() {
 	//Healing Icon
 	ctx.drawImage(healIcon, iconX, 0, iconSize, iconSize);
 	
-	healTimeFill = iconSize * (players[apIndex].healTimer/1.5);
+	healTimeFill = iconSize * (players[apIndex].healTimer/1);
 	
 	ctx.beginPath();
 	ctx.rect(iconX, 0, iconSize, healTimeFill);
 	if (players[apIndex].healType == 0)
 		ctx.fillStyle = 'rgba(0,255,0,0.5)';
 	else
-		ctx.fillStyle = 'rgba(50,50,50,0.5)';
+		ctx.fillStyle = 'rgba(0,75,0,0.5)';
 	ctx.fill();
 	
-	//Attacking Icon
+	//Big Healing Icon
 	ctx.drawImage(rezIcon, iconX, iconSize, iconSize, iconSize);
 	
-	attackTimeFill = iconSize * (players[apIndex].attackTimer/1.0);
+	bigHealTimeFill = iconSize * (players[apIndex].bigHealTimer/4);
 	
 	ctx.beginPath();
-	ctx.rect(iconX, iconSize, iconSize, attackTimeFill);
+	ctx.rect(iconX, iconSize, iconSize, bigHealTimeFill);
 	if (players[apIndex].healType == 1)
 		ctx.fillStyle = 'rgba(0,255,0,0.5)';
 	else
-		ctx.fillStyle = 'rgba(50,50,50,0.5)';
+		ctx.fillStyle = 'rgba(0,75,0,0.5)';
 	ctx.fill();
 };
