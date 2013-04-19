@@ -5,14 +5,14 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 	//3D graphical model
 	this.model = new THREE.SkinnedMesh( setGeo, setMat );
 	this.model.scale.set(10,10,10);
-	this.pistol = 0;
+	this.healType = 0;
 	this.readyState = false; this.onScreen = false;
 	//Identifier
 	this.name = setName;
 	this.health = setHP; this.damageTimer = 0; this.inAOE = false;
 	this.healTimer = 1; this.justHealed = false;
+	this.bigHealTimer = 4; this.justBigHealed = false;
 	this.attackTimer = 1.0; this.justAttacked = false;
-	this.rezTimer = 120; this.justRezzed = false;
 	this.rad = 15;
 	this.target = "";
 	this.actionState = 0;
@@ -43,6 +43,17 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 				socket.emit('END_ANIM', this.name, 1);
 			}
 		}
+		if (this.justBigHealed)
+		{
+			this.bigHealTimer -= delta;
+			
+			if (this.bigHealTimer <= 0)
+			{
+				this.bigHealTimer = 4;
+				this.justBigHealed = false;
+				socket.emit('END_ANIM', this.name, 1);
+			}
+		}
 		if (this.justAttacked)
 		{
 			this.attackTimer -= delta;
@@ -54,18 +65,7 @@ function Player(setGeo, setMat, setLoc, setRot, setName, setHP, setBot){
 				socket.emit('END_ANIM', this.name, 2);
 			}
 		}
-		if (this.justRezzed)
-		{
-			this.rezTimer -= delta;
-			
-			if (this.rezTimer <= 0)
-			{
-				this.rezTimer = 20;
-				this.justRezzed = false;
-				socket.emit('END_ANIM', this.name, 3);
-			}
-		}
-			
+		
 		if (this.damageTimer <= 0)
 		{
 			if (this.inAOE == true)

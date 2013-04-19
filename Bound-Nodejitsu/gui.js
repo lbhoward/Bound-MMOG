@@ -399,26 +399,22 @@ function DrawIcons() {
 	
 	ctx.beginPath();
 	ctx.rect(iconX, 0, iconSize, healTimeFill);
-	ctx.fillStyle = 'rgba(50,50,50,0.5)';
+	if (players[apIndex].healType == 0)
+		ctx.fillStyle = 'rgba(0,255,0,0.5)';
+	else
+		ctx.fillStyle = 'rgba(50,50,50,0.5)';
 	ctx.fill();
 	
 	//Attacking Icon
-	ctx.drawImage(attackIcon, iconX, iconSize, iconSize, iconSize);
+	ctx.drawImage(rezIcon, iconX, iconSize, iconSize, iconSize);
 	
 	attackTimeFill = iconSize * (players[apIndex].attackTimer/1.0);
 	
 	ctx.beginPath();
 	ctx.rect(iconX, iconSize, iconSize, attackTimeFill);
-	ctx.fillStyle = 'rgba(50,50,50,0.5)';
-	ctx.fill();
-	
-	//Rezzing Icons
-	ctx.drawImage(rezIcon, iconX, iconSize*2, iconSize, iconSize);
-	
-	rezTimeFill = iconSize * (players[apIndex].rezTimer/120);
-	
-	ctx.beginPath();
-	ctx.rect(iconX, iconSize*2, iconSize, rezTimeFill);
-	ctx.fillStyle = 'rgba(50,50,50,0.5)';
+	if (players[apIndex].healType == 1)
+		ctx.fillStyle = 'rgba(0,255,0,0.5)';
+	else
+		ctx.fillStyle = 'rgba(50,50,50,0.5)';
 	ctx.fill();
 };
