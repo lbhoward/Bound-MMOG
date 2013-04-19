@@ -119,6 +119,14 @@ function init() {
 	{
 		players[apIndex].loc = new Vector3(players[apIndex].loc.x + ((0.15)*dT), 0, players[apIndex].loc.z);
 	}
+		if (event.keyCode == 49) //1
+	{
+		players[apIndex].healType = 0;
+	}
+	if (event.keyCode == 50) //2
+	{
+		players[apIndex].healType = 1;
+	}
 	
 	});
 	

@@ -42,6 +42,14 @@ var HandleTouchDown = function(event) {
 var GUIInteract = function(x, y) {
 	if (players[apIndex].health > 0)
 	{
+		//Ability Select
+		if (x > SCREEN_WIDTH-iconSize && x < SCREEN_WIDTH)
+			if (y > 0 && y < iconSize)
+				players[apIndex].healType = 0;
+		if (x > SCREEN_WIDTH-iconSize && x < SCREEN_WIDTH)
+			if (y > iconSize && y < iconSize*2)
+				players[apIndex].healType = 1;
+		
 		for (var i = 0; i < players.length; i++)
 		{
 			if (i < 10)
@@ -61,7 +69,7 @@ var GUIInteract = function(x, y) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							if (players[i].healType == 0 && !players[i].justHealed)
+							if (players[apIndex].healType == 0 && !players[apIndex].justHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 15;
@@ -70,7 +78,7 @@ var GUIInteract = function(x, y) {
 								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 								players[apIndex].justHealed = true;
 							}
-							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							else if (players[apIndex].healType == 1 && !players[apIndex].justBigHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 35;
@@ -79,6 +87,9 @@ var GUIInteract = function(x, y) {
 								socket.emit('LOG', "BIGHEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 								players[apIndex].justBigHealed = true;
 							}
+							
+							if (players[i].health > 100)
+								players[i].health = 100;
 						}
 						else if (players[apIndex].justRezzed == false && players[i].health == 0)
 						{
@@ -105,7 +116,7 @@ var GUIInteract = function(x, y) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							if (players[i].healType == 0 && !players[i].justHealed)
+							if (players[apIndex].healType == 0 && !players[apIndex].justHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 15;
@@ -114,7 +125,7 @@ var GUIInteract = function(x, y) {
 								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 								players[apIndex].justHealed = true;
 							}
-							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							else if (players[apIndex].healType == 1 && !players[apIndex].justBigHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 35;
@@ -154,7 +165,7 @@ var GUIInteract = function(x, y) {
 					{
 						if (players[i].health > 0 && players[i].health < 100)
 						{	
-							if (players[i].healType == 0 && !players[i].justHealed)
+							if (players[apIndex].healType == 0 && !players[apIndex].justHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 15;
@@ -163,7 +174,7 @@ var GUIInteract = function(x, y) {
 								socket.emit('LOG', "HEAL:"+players[i].name+":"+pHP+":"+players[i].health + ":" + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + "\n");
 								players[apIndex].justHealed = true;
 							}
-							else if (players[i].healType == 1 && !players[i].justBigHealed)
+							else if (players[apIndex].healType == 1 && !players[apIndex].justBigHealed)
 							{
 								var pHP = players[i].health;
 								players[i].health += 35;

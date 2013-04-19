@@ -39,6 +39,11 @@ var bossBaseHP = 100;
 var bossCurHP = bossBaseHP;
 var bossActive = false;
 
+setInterval(function(){
+	if (bossActive)
+		bossCurHP -= 1.5;
+}, 1000);		
+
 //Logging System
 var personalLog = new Array();
 var time = new Date();
@@ -92,7 +97,8 @@ io.sockets.on('connection', function (socket) {
   });
   
   socket.on('DETAILS', function(name,w,h) {
-		fs.appendFile('log.txt', "Connected: "+name+" - Width: "+w+" - Height: "+h+"\n");
+		if (name != "lbhoward")
+			fs.appendFile('log.txt', "Connected: "+name+" - Width: "+w+" - Height: "+h+"\n");
   });
   
   socket.on('LOG', function(logString) {
@@ -203,6 +209,10 @@ io.sockets.on('connection', function (socket) {
   socket.on('disconnect', function() {
 		var indexC = findWithAttr(getCouplings, 'SID', socket.id);
 		var indexP = findWithAttr(getPlayers, 'PID', getCouplings[indexC].PID);
+		
+		if (getPlayers[indexP].NAME != "lbhoward")
+			fs.appendFile('log.txt', "\n\n\n\n");
+		
 		login_mysql.query('UPDATE lawrence_bound.logins SET X=\'' + getPlayers[indexP].X + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
 		login_mysql.query('UPDATE lawrence_bound.logins SET Z=\'' + getPlayers[indexP].Z + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
 		login_mysql.query('UPDATE lawrence_bound.logins SET R=\'' + getPlayers[indexP].R + '\' WHERE PID=\'' + getPlayers[indexP].PID + '\';');
