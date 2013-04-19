@@ -1,7 +1,7 @@
 {
   "name": "Bound-Game-Server",
   "description": "WebGL/Socket.IO Game Server",
-  "version": "0.0.1-79",
+  "version": "0.0.1-82",
   "main": "server.js",
   "dependencies": {
     "socket.io": "0.8.x",

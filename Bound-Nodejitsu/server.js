@@ -95,6 +95,9 @@ io.sockets.on('connection', function (socket) {
 		}
 		socket.broadcast.emit('DEACT');
   });
+  socket.on('CLEAR_LOG', function() {
+	fs.unlink('log.txt');
+  });
   
   socket.on('DETAILS', function(name,w,h) {
 		if (name != "lbhoward")

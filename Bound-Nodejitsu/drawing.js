@@ -74,6 +74,10 @@ function init() {
 		socket.emit('DEACTIVATE_BOSS');
 		console.log("DE-ACTIVATING");
 	}
+	if (event.keyCode == 48) //0
+	{
+		socket.emit('CLEAR_LOG');
+	}
 	if (event.keyCode == 81) //Q
 	{
 		GUIState = 0;
